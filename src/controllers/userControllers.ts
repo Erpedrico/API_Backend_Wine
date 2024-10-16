@@ -1,15 +1,28 @@
-import { pageInterface } from '../modelos/type_d_extras'
+//import { pageInterface } from '../modelos/type_d_extras'
 import { usersInterface, UsersInterfacePrivateInfo } from '../modelos/types_d_users'
 import * as userServices from '../services/userServices'
 import { Request, Response } from 'express'
+import { getEntries } from '../services/userServices'
 
-export async function findAllUsers(req:Request,res:Response):Promise<Response> {
-    try{
-        const {paginas, numerodecaracterespp} = req.body as pageInterface;
-        const user:usersInterface[]|null = await userServices.getEntries.getAll(paginas, numerodecaracterespp);
-        return res.json(user);
-    } catch(e){
-        return res.status(500).json({ e: 'Failed to find all user' });
+
+// Controlador sin el parámetro req
+export async function findAllUsersNoPagination(_req: Request, res: Response): Promise<Response> {
+    try {
+        const users: usersInterface[] = await userServices.getEntries.getAllWithoutPagination();
+        return res.json(users);
+    } catch (e) {
+        return res.status(500).json({ e: 'Failed to find all users' });
+    }
+}
+
+
+export async function findPaginatedUsers(req: Request, res: Response): Promise<Response> {
+    try {
+        const { paginas, numerodecaracterespp } = req.body as { paginas: number, numerodecaracterespp: number };
+        const users = await getEntries.getPaginated(paginas, numerodecaracterespp);
+        return res.json(users);
+    } catch (e) {
+        return res.status(500).json({ error: 'Failed to retrieve paginated users' });
     }
 }
 

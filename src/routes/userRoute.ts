@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUser, deleteUser, findAllUsers, findUser, logIn, updateUser } from '../controllers/userControllers'
+import { createUser, deleteUser, findAllUsersNoPagination, findPaginatedUsers, findUser, logIn, updateUser } from '../controllers/userControllers'
 
 //import toNewUser from '../extras/utils'
 
@@ -14,9 +14,12 @@ router.route('/:id')
     .delete(deleteUser)
 
 router.route('/all')
-    .post(findAllUsers)
-
+    .get(findAllUsersNoPagination);
+    
 router.route('/logIn')
     .post(logIn)
+
+router.route('/paginated')
+    .post(findPaginatedUsers)
 
 export default router

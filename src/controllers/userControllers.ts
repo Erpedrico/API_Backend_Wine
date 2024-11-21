@@ -1,5 +1,5 @@
 import { pageInterface } from '../modelos/type_d_extras';
-import { usersInterface, usersofDB } from '../modelos/types_d_users';
+import { usersInterface } from '../modelos/types_d_users';
 import * as userServices from '../services/userServices';
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
@@ -25,20 +25,11 @@ export async function findUser(req:Request,res:Response):Promise<Response> {
 
 export const logIn = async (req: Request, res: Response): Promise<Response> => {
     try {
-        const { mail, password } = req.body;
-        const user = await usersofDB.findOne({ mail });
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
+        const { name, password } = req.body;
+        const user:usersInterface|null = await userServices.getEntries.findIdAndPassword(name,password);
+        if (user == null){
+            return res.status(404).json({ message: 'Usuario o contraseña incorrecto' });
         }
-        console.log(user);
-        console.log(password);
-        const passwordIsValid = user.password === password; // Aquí deberías usar bcrypt para comparar las contraseñas
-
-        if (!passwordIsValid) {
-            return res.status(401).json({ message: "Invalid Password" });
-        }
-
         const token = jwt.sign({ id: user._id }, 'winer+jwt', {
             expiresIn: 86400 // 24 hours
         });
@@ -64,7 +55,19 @@ export const logIn = async (req: Request, res: Response): Promise<Response> => {
 export async function createUser(req:Request,res:Response):Promise<Response> {
     try{
         const user:usersInterface|null = await userServices.getEntries.create(req.body as object)
-        return res.status(200).json(user)
+        const token = jwt.sign({ id: user._id }, 'winer+jwt', {
+            expiresIn: 86400 // 24 hours
+        });
+
+        const isAdmin = user.role === "admin";
+
+        return res.status(200).json({
+            id: user._id,
+            mail: user.mail,
+            role: user.role,
+            accessToken: token,
+            isAdmin: isAdmin
+        });
     } catch(e){
         return res.status(500).json({ e: 'Failed to create user' });
     }

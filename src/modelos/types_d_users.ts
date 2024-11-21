@@ -6,9 +6,8 @@ export interface usersInterface{
     mail: string,
     password: string,
     comment: string,
-    tipo: string,
-    habilitado: boolean;
-    role: string;
+    habilitado: boolean,
+    role: string
 }
 export type UsersInterfacePublicInfo = Pick<usersInterface,  'name' | 'comment'>
 export type UsersInterfacePrivateInfo = Pick<usersInterface, 'name' | 'password'>
@@ -19,7 +18,6 @@ export const usersSchema = new Schema<usersInterface>({
     mail: String,
     password: String,
     comment: String,
-    tipo: String,
     habilitado: Boolean,
     role: String
 })

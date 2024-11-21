@@ -44,6 +44,11 @@ export async function logIn(req:Request,res:Response):Promise<Response> {
 
 export async function createUser(req:Request,res:Response):Promise<Response> {
     try{
+        const { username } = req.body as UsersInterfacePrivateInfo;
+        const name:usersInterface|null = await userServices.getEntries.findByUsername(username)
+        if (name==null){
+            return res.status(404).json({ message: 'Username en uso' });
+        } 
         const user:usersInterface|null = await userServices.getEntries.create(req.body as object)
         const token: string = jwt.sign({username: user.username,tipo: user.tipo}, process.env.SECRET || 'tokentest')
         return res.header('auth-token', token).json(user); 

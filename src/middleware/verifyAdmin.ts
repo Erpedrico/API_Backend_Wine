@@ -4,9 +4,9 @@ export const AdminValidation = (req: Request, res: Response, next: NextFunction)
     console.log('Verifying admin');
     try{
         //Recogemos datos del payload del token
-        const admin = req.user?.isAdmin;
-        console.log(admin);
-        if(admin != true){
+        const tipo = req.user?.tipo;
+        console.log(tipo);
+        if(tipo != 'admin'){
             return res.json('You are not admin'); 
         }
          //eres administrador

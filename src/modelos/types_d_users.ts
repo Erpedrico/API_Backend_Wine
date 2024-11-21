@@ -6,21 +6,24 @@ export interface usersInterface{
     mail: string,
     password: string,
     comment: string,
-    tipo: string,
-    habilitado: boolean;
+    tipo: 'admin' | 'wineLover' | 'wineMaker',
+    habilitado: boolean
 }
 export type UsersInterfacePublicInfo = Pick<usersInterface,  'name' | 'comment'>
-export type UsersInterfacePrivateInfo = Pick<usersInterface, 'name' | 'password'>
+export type UsersInterfacePrivateInfo = Pick<usersInterface, 'username' | 'password'>
 export type newUserInfo = Omit<usersInterface,'id'>
+export interface usersfromDBInterface extends usersInterface{
+    _id: string
+}
 
 export const usersSchema = new Schema<usersInterface>({
-    username: String,
-    name: String,
-    mail: String,
-    password: String,
-    comment: String,
-    tipo: String,
-    habilitado: Boolean
+    username: { type: String, required: true, unique: true},
+    name: { type: String, required: true },
+    mail: { type: String, required: true },
+    password: { type: String, required: true },
+    comment: { type: String, required: true },
+    tipo: { type: String, required: true, enum: ['admin', 'wineLover', 'wineMaker'] },
+    habilitado: { type: Boolean, required: true, }
 })
 
 export const usersofDB = model<usersInterface>('user',usersSchema)

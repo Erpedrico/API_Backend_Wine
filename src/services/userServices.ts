@@ -1,4 +1,4 @@
-import { usersInterface, usersofDB } from '../modelos/types_d_users'
+import { usersInterface,usersfromDBInterface,usersofDB } from '../modelos/types_d_users'
 //import userData from './users.json'
 
 export const getEntries = {
@@ -12,9 +12,9 @@ export const getEntries = {
     findById: async(id:string): Promise<usersInterface | null>=>{
         return await usersofDB.findById(id);
     },
-    findIdAndPassword: async(name:string,password:string): Promise<usersInterface | null>=>{
+    findIdAndPassword: async(username:string,password:string): Promise<usersInterface | null>=>{
         // Si falla quitar el name:name por name, pero no deberia.
-        return await usersofDB.findOne({name:name}).exec()
+        return await usersofDB.findOne({username:username}).exec()
         .then(userResponse=>{
             if (userResponse == null || userResponse.password != password){
                 return null;
@@ -23,7 +23,7 @@ export const getEntries = {
             }
         });
     },
-    findByUsername: async(username:string) => {
+    findByUsername: async(username:string) : Promise<usersfromDBInterface | null>=> {
         console.log(username);
         return await usersofDB.findOne({username: username});
     }, 

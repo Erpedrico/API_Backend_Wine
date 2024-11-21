@@ -5,7 +5,7 @@ import { handleHttp } from '../utils/error.handle'
 
 interface IPayload {
     username: string;
-    isAdmin: boolean; // Añade el campo isAdmin al payload
+    tipo: 'admin' | 'wineLover' | 'wineMaker';
     iat: number;
     exp: number;
 }

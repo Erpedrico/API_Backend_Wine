@@ -5,6 +5,8 @@ import * as experienciasServices from '../services/experienciasServices'
 import * as wineServices from '../services/wineServices'
 import { Request, Response } from 'express'
 
+import jwt from 'jsonwebtoken'
+
 export async function findAllUsers(req:Request,res:Response):Promise<Response> {
     try{
         const {paginas, numerodecaracterespp} = req.body as pageInterface;
@@ -29,7 +31,8 @@ export async function logIn(req:Request,res:Response):Promise<Response> {
         const { name,password } = req.body as UsersInterfacePrivateInfo;
         const user:usersInterface|null = await userServices.getEntries.findIdAndPassword(name, password);
         if (user!=null){
-            return res.json(user);
+            const token: string = jwt.sign({username: user.username,}, process.env.SECRET || 'tokentest')
+            return res.header('auth-token', token).json(user); 
         } else {
             return res.status(400).json({message:'User or password incorrect'})
         }
@@ -41,7 +44,8 @@ export async function logIn(req:Request,res:Response):Promise<Response> {
 export async function createUser(req:Request,res:Response):Promise<Response> {
     try{
         const user:usersInterface|null = await userServices.getEntries.create(req.body as object)
-        return res.status(200).json(user)
+        const token: string = jwt.sign({username: user.username,}, process.env.SECRET || 'tokentest')
+        return res.header('auth-token', token).json(user); 
     } catch(e){
         return res.status(500).json({ e: 'Failed to create user' });
     }

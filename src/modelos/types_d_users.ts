@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 
 export interface usersInterface{
+    username: string,
     name: string,
     mail: string,
     password: string,
@@ -13,6 +14,7 @@ export type UsersInterfacePrivateInfo = Pick<usersInterface, 'name' | 'password'
 export type newUserInfo = Omit<usersInterface,'id'>
 
 export const usersSchema = new Schema<usersInterface>({
+    username: String,
     name: String,
     mail: String,
     password: String,

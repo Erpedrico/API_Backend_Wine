@@ -1,5 +1,8 @@
 import express from 'express'
 import { createUser, deleteUser, findAllUsers, findUser, logIn, toggleHabilitacion, updateUser } from '../controllers/userControllers'
+import { TokenValidation} from '../middleware/verifyJWT'
+import { verifyOwnership } from '../middleware/verifyOwner'
+import { AdminValidation} from '../middleware/verifyAdmin'
 
 //import toNewUser from '../extras/utils'
 
@@ -9,12 +12,12 @@ router.route('/')
     .post(createUser)
 
 router.route('/:id')
-    .get(findUser)
-    .put(updateUser)
-    .delete(deleteUser)
+    .get(TokenValidation, findUser)
+    .put(TokenValidation, verifyOwnership, updateUser)
+    .delete(TokenValidation, verifyOwnership, deleteUser)
 
 router.route('/all')
-    .post(findAllUsers)
+    .post(TokenValidation, AdminValidation, findAllUsers)
 
 router.route('/logIn')
     .post(logIn)

@@ -23,6 +23,10 @@ export const getEntries = {
             }
         });
     },
+    findByUsername: async(username:string) => {
+        console.log(username);
+        return await usersofDB.findOne({username: username});
+    }, 
     create: async(entry:object): Promise<usersInterface>=>{
         return await usersofDB.create(entry);
     },

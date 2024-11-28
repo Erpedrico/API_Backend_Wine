@@ -7,21 +7,21 @@ import { Request, Response } from 'express'
 
 import jwt from 'jsonwebtoken'
 
-export async function findAllUsers(req:Request,res:Response):Promise<Response> {
-    try{
-        const {paginas, numerodecaracterespp} = req.body as pageInterface;
-        const user:usersInterface[]|null = await userServices.getEntries.getAll(paginas, numerodecaracterespp);
+export async function findAllUsers(req: Request, res: Response): Promise<Response> {
+    try {
+        const { paginas, numerodecaracterespp } = req.body as pageInterface;
+        const user: usersInterface[] | null = await userServices.getEntries.getAll(paginas, numerodecaracterespp);
         return res.json(user);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to find all user' });
     }
 }
 
-export async function findUser(req:Request,res:Response):Promise<Response> {
-    try{
-        const user:usersInterface|null = await userServices.getEntries.findById(req.params.id)
+export async function findUser(req: Request, res: Response): Promise<Response> {
+    try {
+        const user: usersInterface | null = await userServices.getEntries.findById(req.params.id)
         return res.json(user);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to find user' });
     }
 }
@@ -35,7 +35,7 @@ export async function logIn(req: Request, res: Response): Promise<Response> {
 
         // Buscar el usuario en la base de datos
         const user: usersInterface | null = await userServices.getEntries.findIdAndPassword(username, password);
-        
+
         if (user != null) {
             // Si el usuario es encontrado, genera el token JWT
             const token: string = jwt.sign(
@@ -86,22 +86,22 @@ export async function createUser(req: Request, res: Response): Promise<Response>
 
 
 
-export async function updateUser(req:Request,res:Response):Promise<Response> {
-    try{
-        const user:usersInterface|null = await userServices.getEntries.update(req.params.id,req.body as object)
+export async function updateUser(req: Request, res: Response): Promise<Response> {
+    try {
+        const user: usersInterface | null = await userServices.getEntries.update(req.params.id, req.body as object)
         return res.status(200).json(user);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to update user' });
     }
 }
 
-export async function deleteUser(req:Request,res:Response):Promise<Response> {
-    try{
-        const user:usersInterface|null = await userServices.getEntries.delete(req.params.id);
+export async function deleteUser(req: Request, res: Response): Promise<Response> {
+    try {
+        const user: usersInterface | null = await userServices.getEntries.delete(req.params.id);
         await experienciasServices.getEntries.findByOwnerandDelete(req.params.id);
         await wineServices.getEntries.findByOwnerandDelete(req.params.id);
         return res.json(user);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to delete user' });
     }
 }
@@ -109,7 +109,7 @@ export async function deleteUser(req:Request,res:Response):Promise<Response> {
 export async function toggleHabilitacion(req: Request, res: Response): Promise<Response> {
     try {
         const { habilitado } = req.body;  // Obtener el nuevo estado de habilitación del cuerpo de la petición
-        
+
         if (typeof habilitado !== 'boolean') {
             return res.status(400).json({ message: 'El campo habilitado debe ser un valor booleano' });
         }
@@ -129,3 +129,11 @@ export async function toggleHabilitacion(req: Request, res: Response): Promise<R
     }
 }
 
+export async function findUserByName(req: Request, res: Response): Promise<Response> {
+    try {
+        const user: string | null = await userServices.getEntries.findIdByName(req.params.name);
+        return res.json(user);
+    } catch (e) {
+        return res.status(500).json({ e: 'Failed to find user' });
+    }
+}

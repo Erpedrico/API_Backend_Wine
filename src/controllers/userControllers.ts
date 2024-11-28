@@ -26,36 +26,65 @@ export async function findUser(req:Request,res:Response):Promise<Response> {
     }
 }
 
-export async function logIn(req:Request,res:Response):Promise<Response> {
-    try{
-        const { username,password } = req.body as UsersInterfacePrivateInfo;
-        console.log(username, password);
-        const user:usersInterface|null = await userServices.getEntries.findIdAndPassword(username, password);
-        if (user!=null){
-            const token: string = jwt.sign({username: user.username, tipo: user.tipo}, process.env.SECRET || 'tokentest')
-            return res.header('auth-token', token).json(user); 
+export async function logIn(req: Request, res: Response): Promise<Response> {
+    try {
+        const { username, password } = req.body as UsersInterfacePrivateInfo;
+
+        // Verifica los valores de username y password recibidos en el backend
+        console.log("Received username and password:", username, password);
+
+        // Buscar el usuario en la base de datos
+        const user: usersInterface | null = await userServices.getEntries.findIdAndPassword(username, password);
+        
+        if (user != null) {
+            // Si el usuario es encontrado, genera el token JWT
+            const token: string = jwt.sign(
+                { username: user.username, tipo: user.tipo },
+                process.env.SECRET || 'tokentest'
+            );
+
+            // Verifica que el login haya sido exitoso y muestra los datos
+            console.log("Login completed successfully, user found:", user);
+            console.log("Generated token:", token); // Muestra el token generado
+
+            // Responde con el usuario y el token
+            return res.json({ user, token }); // Enviar tanto el usuario como el token
         } else {
-            return res.status(400).json({message:'User or password incorrect'})
+            // Si el usuario no se encuentra, responde con un error
+            return res.status(400).json({ message: 'User or password incorrect' });
         }
-    } catch(e){
+    } catch (e) {
+        // Si ocurre un error, se maneja con un error 500
         return res.status(500).json({ e: 'Failed to find user' });
     }
 }
 
-export async function createUser(req:Request,res:Response):Promise<Response> {
-    try{
+
+export async function createUser(req: Request, res: Response): Promise<Response> {
+    try {
         const { username } = req.body as UsersInterfacePrivateInfo;
-        const name:usersInterface|null = await userServices.getEntries.findByUsername(username)
-        if (name==null){
-            return res.status(404).json({ message: 'Username en uso' });
-        } 
-        const user:usersInterface|null = await userServices.getEntries.create(req.body as object)
-        const token: string = jwt.sign({username: user.username,tipo: user.tipo}, process.env.SECRET || 'tokentest')
-        return res.header('auth-token', token).json(user); 
-    } catch(e){
-        return res.status(500).json({ e: 'Failed to create user' });
+
+        // Comprobar si el username ya existe
+        const existingUser: usersInterface | null = await userServices.getEntries.findByUsername(username);
+        if (existingUser) {
+            return res.status(400).json({ message: 'Username en uso' });
+        }
+
+        console.log("Creando usuario...");
+
+        // Crear el usuario
+        const newUser: usersInterface | null = await userServices.getEntries.create(req.body as object);
+
+        // Responder con el usuario creado
+        return res.status(201).json(newUser);
+
+    } catch (error) {
+        console.error('Error al crear usuario:', error);
+        return res.status(500).json({ error: 'Failed to create user' });
     }
 }
+
+
 
 export async function updateUser(req:Request,res:Response):Promise<Response> {
     try{

@@ -7,6 +7,7 @@ export const AdminValidation = (req: Request, res: Response, next: NextFunction)
         const tipo = req.user?.tipo;
         console.log(tipo);
         if(tipo != 'admin'){
+            console.log("You are not admin")
             return res.json('You are not admin'); 
         }
          //eres administrador

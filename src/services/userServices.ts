@@ -27,7 +27,7 @@ export const getEntries = {
         console.log(username);
         return await usersofDB.findOne({username: username});
     }, 
-    create: async(entry:object): Promise<usersInterface>=>{
+    create: async(entry:usersInterface): Promise<usersInterface>=>{
         return await usersofDB.create(entry);
     },
     update: async(id:string,body:object): Promise<usersInterface | null>=>{
@@ -36,5 +36,11 @@ export const getEntries = {
     },
     delete: async(id:string): Promise<usersInterface | null>=>{
         return await usersofDB.findByIdAndDelete(id);
+    },
+    addFriend: async(name1:string,name2:string)=>{
+        return await usersofDB.findOneAndUpdate({username:name1},{$addToSet:{amigos:name2}});
+    },
+    delFriend: async(name1:string,name2:string)=>{
+        return await usersofDB.findOneAndUpdate({username:name1},{$pull:{amigos:name2}});
     }
 }

@@ -9,7 +9,8 @@ import { AdminValidation } from '../middleware/verifyAdmin'
 const router = express.Router()
 
 router.route('/')
-    .post(TokenValidation, AdminValidation, createUser)
+    // .post(TokenValidation, AdminValidation, createUser)
+    .post(createUser)
 
 router.route('/:id')
     .get(TokenValidation, findUser)

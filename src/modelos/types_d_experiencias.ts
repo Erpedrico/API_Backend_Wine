@@ -11,6 +11,7 @@ export interface experienciasInterface {
     contactmail: string;
     rating: number;
     reviews: Types.ObjectId[]; // Array of review references
+    date: string;
 }
 
 export const experienciasSchema = new Schema<experienciasInterface>({

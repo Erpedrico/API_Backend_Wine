@@ -1,5 +1,10 @@
 import { model, Schema, Types } from "mongoose";
 
+export interface Service {
+    icon: string; // Icon representation (e.g., emoji or URL)
+    label: string; // Label describing the service (e.g., "Parking")
+}
+
 export interface experienciasInterface {
     title: string;
     owner: Types.ObjectId; // Creator's ID
@@ -9,9 +14,15 @@ export interface experienciasInterface {
     location: string;
     contactnumber: number;
     contactmail: string;
-    rating: number;
+    rating: {
+        type: number,
+        required: true,
+        min: 0,
+        max: 5,
+    }
     reviews: Types.ObjectId[]; // Array of review references
     date: string;
+    services: Service[]; // Array of services
 }
 
 export const experienciasSchema = new Schema<experienciasInterface>({
@@ -25,6 +36,13 @@ export const experienciasSchema = new Schema<experienciasInterface>({
     contactmail: { type: String, required: true },
     rating: { type: Number, default: 0 },
     reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }],
+    date: { type: String, required: true },
+    services: [
+        {
+            icon: { type: String, required: true },
+            label: { type: String, required: true },
+        },
+    ],
 });
 
 export const experienciasofDB = model<experienciasInterface>('experiencias', experienciasSchema);

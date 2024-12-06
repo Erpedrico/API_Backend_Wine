@@ -140,13 +140,15 @@ export async function findUserByName(req: Request, res: Response): Promise<Respo
 
 export async function getUserExperiences(req: Request, res: Response): Promise<Response> {
     try {
-        const user = await userServices.getEntries.findUserExperiences(req.params.name);
+        const user = await userServices.getEntries.findUserExperiences(req.user.username);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
         return res.json({ experiences: user.experiences });
     } catch (error) {
+
         console.error('Failed to fetch user experiences:', error);
+
         return res.status(500).json({ error: 'Failed to fetch user experiences' });
     }
 }

@@ -24,7 +24,7 @@ export const usersSchema = new Schema<usersInterface>({
     password: { type: String, required: true },
     tipo: { type: String, required: true, enum: ['admin', 'wineLover', 'wineMaker'] },
     habilitado: { type: Boolean, required: true, default: true },
-    experiences: [{ type: Schema.Types.ObjectId, ref: "experiencias" }],
+    experiences: [{ type: Schema.Types.ObjectId, ref: "experiencias", default: [] }],
 })
 
 export const usersofDB = model<usersInterface>('user', usersSchema)

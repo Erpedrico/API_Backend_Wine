@@ -25,6 +25,6 @@ export const TokenValidation = (req: Request, res: Response, next: NextFunction)
         next();
 
     } catch (error) {
-        handleHttp(res, 'Your token is not valid', error); 
+        handleHttp(res, 'Your token is not valid', error);
     }
 };

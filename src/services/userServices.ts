@@ -50,5 +50,9 @@ export const getEntries = {
     },
     delete: async (id: string): Promise<usersInterface | null> => {
         return await usersofDB.findByIdAndDelete(id);
-    }
+    },
+    findUserExperiences: async (id: string) => {
+        return await usersofDB.findById(id).populate('experiences').exec();
+    },
+
 }

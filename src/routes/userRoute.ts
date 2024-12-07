@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUser, deleteUser, findAllUsers, findUser, findUserByName, logIn, toggleHabilitacion, updateUser, getUserExperiences } from '../controllers/userControllers'
+import { createUser, deleteUser, findAllUsers, findUser, findUserByName, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByUserame } from '../controllers/userControllers'
 import { TokenValidation } from '../middleware/verifyJWT'
 import { verifyOwnership } from '../middleware/verifyOwner'
 import { AdminValidation } from '../middleware/verifyAdmin'
@@ -31,6 +31,9 @@ router.route('/findByName/:name')
 
 router.route('/experiences')
     .get(TokenValidation, getUserExperiences);
+
+router.route('/findByUsername/:username')
+    .get(findUserByUserame)
 
 
 export default router

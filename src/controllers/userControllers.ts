@@ -138,9 +138,12 @@ export async function findUserByName(req: Request, res: Response): Promise<Respo
     }
 }
 
+
+
 export async function getUserExperiences(req: Request, res: Response): Promise<Response> {
     try {
-        const user = await userServices.getEntries.findUserExperiences(req.user.username);
+        const user = await userServices.getEntries.findUserExperiences(req.user.id);
+        console.log('User fetched:', user); // Verifica si se encuentra el usuario
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -150,5 +153,14 @@ export async function getUserExperiences(req: Request, res: Response): Promise<R
         console.error('Failed to fetch user experiences:', error);
 
         return res.status(500).json({ error: 'Failed to fetch user experiences' });
+    }
+}
+
+export async function findUserByUserame(req: Request, res: Response): Promise<Response> {
+    try {
+        const user: usersInterface | null = await userServices.getEntries.findByUsername(req.params.username)
+        return res.json(user);
+    } catch (e) {
+        return res.status(500).json({ e: 'Failed to find user' });
     }
 }

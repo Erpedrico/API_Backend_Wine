@@ -22,6 +22,7 @@ export const TokenValidation = (req: Request, res: Response, next: NextFunction)
         // Obtenemos de nuevo las datos codificadas del token
         const payload = jwt.verify(token, process.env.SECRET || 'tokentest') as IPayload;
         req.user = payload;
+        console.log('User added to request:', req.user); // Asegúrate de que req.user contiene los datos
         next();
     } catch (error) {
         handleHttp(res, 'Your token is not valid', error);

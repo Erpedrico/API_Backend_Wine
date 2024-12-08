@@ -38,9 +38,17 @@ export const getEntries = {
         return await usersofDB.findByIdAndDelete(id);
     },
     addFriend: async(name1:string,name2:string)=>{
+        await usersofDB.findOneAndUpdate({username:name2},{$addToSet:{amigos:name1}});
         return await usersofDB.findOneAndUpdate({username:name1},{$addToSet:{amigos:name2}});
     },
     delFriend: async(name1:string,name2:string)=>{
+        await usersofDB.findOneAndUpdate({username:name2},{$pull:{amigos:name1}});
         return await usersofDB.findOneAndUpdate({username:name1},{$pull:{amigos:name2}});
+    },
+    addSolicitud: async(name1:string,name2:string)=>{
+        return await usersofDB.findOneAndUpdate({username:name1},{$addToSet:{solicitudes:name2}}, {new: true});
+    },
+    delSolicitud: async(name1:string,name2:string)=>{
+        return await usersofDB.findOneAndUpdate({username:name1},{$pull:{solicitudes:name2}});
     }
 }

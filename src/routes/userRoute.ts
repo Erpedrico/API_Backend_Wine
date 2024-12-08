@@ -1,5 +1,5 @@
 import express from 'express'
-import { addFriend, createUser, deleteUser, delFriend, findAllUsers, findUser, logIn, toggleHabilitacion, updateUser } from '../controllers/userControllers'
+import { addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findUser, logIn, toggleHabilitacion, updateUser } from '../controllers/userControllers'
 import { TokenValidation} from '../middleware/verifyJWT'
 import { verifyOwnership } from '../middleware/verifyOwner'
 import { AdminValidation} from '../middleware/verifyAdmin'
@@ -25,9 +25,13 @@ router.route('/logIn')
 router.route('/:id/habilitacion')
   .patch(toggleHabilitacion)
 
-router.route('/friend/:idUser/:friend')
-  .post(addFriend)
+router.route('/friend/:name1/:name2')
+  .get(addFriend)
   .delete(delFriend)    
+
+router.route('/solicitud/:name1/:name2')
+  .get(addSolicitud)
+  .delete(delSolicitud) 
 
     
 export default router

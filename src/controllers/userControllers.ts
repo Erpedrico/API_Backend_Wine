@@ -19,8 +19,14 @@ export async function findAllUsers(req:Request,res:Response):Promise<Response> {
 
 export async function findUser(req:Request,res:Response):Promise<Response> {
     try{
-        const user:usersInterface|null = await userServices.getEntries.findById(req.params.id)
-        return res.json(user);
+        const messagep:string = 'No encontrado'
+        const user:usersInterface|null = await userServices.getEntries.findByUsername(req.params.id)
+        if (user==null){
+            console.log('Este es');
+            return res.status(201).json(messagep);
+        } else{
+            return res.status(200).json(user);
+        }
     } catch(e){
         return res.status(500).json({ e: 'Failed to find user' });
     }
@@ -44,12 +50,13 @@ export async function logIn(req:Request,res:Response):Promise<Response> {
 
 export async function createUser(req:Request,res:Response):Promise<Response> {
     try{
-        const { username } = req.body as UsersInterfacePrivateInfo;
+        /*const { username } = req.body as UsersInterfacePrivateInfo;
         const name:usersInterface|null = await userServices.getEntries.findByUsername(username)
         if (name==null){
             return res.status(404).json({ message: 'Username en uso' });
-        } 
-        const user:usersInterface|null = await userServices.getEntries.create(req.body as object)
+        } */
+        const user:usersInterface|null = await userServices.getEntries.create(req.body as usersInterface)
+        console.log(user);
         const token: string = jwt.sign({username: user.username,tipo: user.tipo}, process.env.SECRET || 'tokentest')
         return res.header('auth-token', token).json(user); 
     } catch(e){
@@ -74,6 +81,45 @@ export async function deleteUser(req:Request,res:Response):Promise<Response> {
         return res.json(user);
     } catch(e){
         return res.status(500).json({ e: 'Failed to delete user' });
+    }
+}
+
+export async function addFriend(req:Request,res:Response):Promise<Response> {
+    try{
+        const user:usersInterface|null = await userServices.getEntries.addFriend(req.params.name1,req.params.name2)
+        return res.json(user);
+    } catch(e){
+        return res.status(500).json({ e: 'Failed to add friend' });
+    }
+}
+
+export async function delFriend(req:Request,res:Response):Promise<Response> {
+    try{
+        const user:usersInterface|null = await userServices.getEntries.delFriend(req.params.name1,req.params.name2)
+        return res.json(user);
+    } catch(e){
+        return res.status(500).json({ e: 'Failed to add friend' });
+    }
+}
+
+export async function addSolicitud(req:Request,res:Response):Promise<Response> {
+    try{
+        console.log('Estamos aqui para el addsolicitud');
+        console.log(req.params.name1, req.params.name2);
+        const user:usersInterface|null = await userServices.getEntries.addSolicitud(req.params.name1 as string,req.params.name2 as string)
+        console.log('Usuario:', user);
+        return res.status(200).json(user);
+    } catch(e){
+        return res.status(500).json({ e: 'Failed to add friend' });
+    }
+}
+
+export async function delSolicitud(req:Request,res:Response):Promise<Response> {
+    try{
+        const user:usersInterface|null = await userServices.getEntries.delSolicitud(req.params.name1,req.params.name2)
+        return res.json(user);
+    } catch(e){
+        return res.status(500).json({ e: 'Failed to add friend' });
     }
 }
 

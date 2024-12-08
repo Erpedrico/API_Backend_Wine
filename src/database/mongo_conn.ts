@@ -3,8 +3,10 @@ import { connect, connection } from 'mongoose';
 //import mongoose from 'mongoose';
 
 //const connectionString = 'mongodb://localhost:27017/Prueba_1'
+//cosnt connectionString = 'mongodb://localhost:27017/Proyecto_Winners'
+//const connectionString = 'mongodb://mongo-db/'
 export async function run() {
-    await connect('mongodb://localhost:27017/Proyecto_Winners')
+    await connect('mongodb://mongo-db/Proyecto_WineR')
     .then(()=>{
         console.log('Database connected!!')
     }) .catch((err)=>{

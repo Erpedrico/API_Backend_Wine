@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Backend service
   backend:
-    image: your-backend-image:latest  # Replace with your backend Docker image from Docker Hub
+    image: andreipip/backend_winer_prod:0.0.1 # Replace with your backend Docker image from Docker Hub
     container_name: backend_winer
     ports:
       - "5000:5000"
@@ -14,7 +14,7 @@ services:
 
   # Frontend service
   frontend:
-    image: your-frontend-image:latest  # Replace with your frontend Docker image from Docker Hub
+    image: andreipip/frontend_react_winer_prod:0.0.1 # Replace with your frontend Docker image from Docker Hub
     container_name: frontend_react_winer
     ports:
       - "3000:3000"

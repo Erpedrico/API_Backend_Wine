@@ -1,3 +1,5 @@
+
+/*
 import { newUserInfo } from "../modelos/types_d_users"
 
 const parseName = (nameFromRequest:any):string =>{
@@ -45,4 +47,5 @@ const toNewUser = (object:any): newUserInfo => {
     return newUser
 }
 
-export default toNewUser
+
+export default toNewUser*/

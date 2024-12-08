@@ -1,0 +1,39 @@
+[
+    {
+      "id": 1,
+      "name": "P",
+      "username": "user_p",
+      "mail": "p@example.com",
+      "password": "securePassP",
+      "role": "wineLover",
+      "comment": "Amo los vinos tintos."
+    },
+    {
+      "id": 2,
+      "name": "S",
+      "username": "user_s",
+      "mail": "s@example.com",
+      "password": "securePassS",
+      "role": "admin",
+      "comment": "Admin de la plataforma."
+    },
+    {
+      "id": 3,
+      "name": "Q",
+      "username": "user_q",
+      "mail": "q@example.com",
+      "password": "securePassQ",
+      "role": "wineMaker",
+      "comment": "Productor de vinos artesanales."
+    },
+    {
+      "id": 4,
+      "name": "D",
+      "username": "user_d",
+      "mail": "d@example.com",
+      "password": "securePassD",
+      "role": "wineLover",
+      "comment": "Me encantan los vinos blancos."
+    }
+  ]
+  

@@ -4,6 +4,7 @@ import userRouter from './routes/userRoute'
 import experienciasRouter from './routes/experienciasRoute'
 import wineRouter from './routes/wineRoute'
 import { run } from './database/mongo_conn'
+import initializeSocket from './routes/chatRoute'
 
 const app = express()
 app.use(express.json())
@@ -31,6 +32,8 @@ app.use('/api/wine',wineRouter)
 
 
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
     console.log('el servidor esta escuchando en el puerto '+ PORT)
 })
+
+initializeSocket(server);

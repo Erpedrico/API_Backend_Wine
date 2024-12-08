@@ -87,7 +87,6 @@ export async function deleteUser(req:Request,res:Response):Promise<Response> {
 export async function addFriend(req:Request,res:Response):Promise<Response> {
     try{
         const user:usersInterface|null = await userServices.getEntries.addFriend(req.params.name1,req.params.name2)
-        await userServices.getEntries.addFriend(req.params.name2,req.params.name1)
         return res.json(user);
     } catch(e){
         return res.status(500).json({ e: 'Failed to add friend' });
@@ -97,7 +96,27 @@ export async function addFriend(req:Request,res:Response):Promise<Response> {
 export async function delFriend(req:Request,res:Response):Promise<Response> {
     try{
         const user:usersInterface|null = await userServices.getEntries.delFriend(req.params.name1,req.params.name2)
-        await userServices.getEntries.delFriend(req.params.name2,req.params.name1)
+        return res.json(user);
+    } catch(e){
+        return res.status(500).json({ e: 'Failed to add friend' });
+    }
+}
+
+export async function addSolicitud(req:Request,res:Response):Promise<Response> {
+    try{
+        console.log('Estamos aqui para el addsolicitud');
+        console.log(req.params.name1, req.params.name2);
+        const user:usersInterface|null = await userServices.getEntries.addSolicitud(req.params.name1 as string,req.params.name2 as string)
+        console.log('Usuario:', user);
+        return res.status(200).json(user);
+    } catch(e){
+        return res.status(500).json({ e: 'Failed to add friend' });
+    }
+}
+
+export async function delSolicitud(req:Request,res:Response):Promise<Response> {
+    try{
+        const user:usersInterface|null = await userServices.getEntries.delSolicitud(req.params.name1,req.params.name2)
         return res.json(user);
     } catch(e){
         return res.status(500).json({ e: 'Failed to add friend' });

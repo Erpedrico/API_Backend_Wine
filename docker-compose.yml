@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Backend service
+  backend:
+    image: your-backend-image:latest  # Replace with your backend Docker image from Docker Hub
+    container_name: backend_winer
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  # Frontend service
+  frontend:
+    image: your-frontend-image:latest  # Replace with your frontend Docker image from Docker Hub
+    container_name: frontend_react_winer
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # MongoDB service
+  mongo:
+    image: mongo:latest  # Using the latest MongoDB image from Docker Hub
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - /home/ea3/mongo-backup:/data/db
+    networks:
+      - app-network
+
+# Defining the network
+networks:
+  app-network:
+    driver: bridge

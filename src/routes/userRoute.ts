@@ -1,6 +1,6 @@
 import express from 'express'
 import { addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findUser, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByName, findUserByUserName } from '../controllers/userControllers'
-import { TokenValidation} from '../middleware/verifyJWT'
+import { TokenValidation } from '../middleware/verifyJWT'
 import { verifyOwnership } from '../middleware/verifyOwner'
 import { AdminValidation } from '../middleware/verifyAdmin'
 
@@ -24,20 +24,20 @@ router.route('/logIn')
     .post(logIn)
 
 router.route('/:id/habilitacion')
-  .patch(toggleHabilitacion)
+    .patch(toggleHabilitacion)
 
 router.route('/friend/:name1/:name2')
-  .get(addFriend)
-  .delete(delFriend)    
+    .get(addFriend)
+    .delete(delFriend)
 
 router.route('/solicitud/:name1/:name2')
-  .get(addSolicitud)
-  .delete(delSolicitud) 
+    .get(addSolicitud)
+    .delete(delSolicitud)
 
 router.route('/findByName/:name')
     .get(findUserByName)
 
-router.route('/experiences')
+router.route('/experiences/all')
     .get(TokenValidation, getUserExperiences);
 
 router.route('/findByUsername/:username')

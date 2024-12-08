@@ -17,17 +17,17 @@ export async function findAllUsers(req: Request, res: Response): Promise<Respons
     }
 }
 
-export async function findUser(req:Request,res:Response):Promise<Response> {
-    try{
-        const messagep:string = 'No encontrado'
-        const user:usersInterface|null = await userServices.getEntries.findById(req.params.id)
-        if (user==null){
+export async function findUser(req: Request, res: Response): Promise<Response> {
+    try {
+        const messagep: string = 'No encontrado'
+        const user: usersInterface | null = await userServices.getEntries.findById(req.params.id)
+        if (user == null) {
             console.log('Este es');
             return res.status(201).json(messagep);
-        } else{
+        } else {
             return res.status(200).json(user);
         }
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to find user' });
     }
 }
@@ -45,7 +45,7 @@ export async function logIn(req: Request, res: Response): Promise<Response> {
         if (user != null) {
             // Si el usuario es encontrado, genera el token JWT
             const token: string = jwt.sign(
-                { username: user.username, tipo: user.tipo },
+                { _id: user._id, username: user.username, tipo: user.tipo },
                 process.env.SECRET || 'tokentest'
             );
 
@@ -54,7 +54,7 @@ export async function logIn(req: Request, res: Response): Promise<Response> {
             console.log("Generated token:", token); // Muestra el token generado
 
             // Responde con el usuario y el token
-            return res.header('auth-token', token).json({ user, token }); // Enviar tanto el usuario como el token
+            return res.json({ user, token }); // Enviar tanto el usuario como el token
         } else {
             // Si el usuario no se encuentra, responde con un error
             return res.status(400).json({ message: 'User or password incorrect' });
@@ -65,18 +65,18 @@ export async function logIn(req: Request, res: Response): Promise<Response> {
     }
 }
 
-export async function createUser(req:Request,res:Response):Promise<Response> {
-    try{
+export async function createUser(req: Request, res: Response): Promise<Response> {
+    try {
         /*const { username } = req.body as UsersInterfacePrivateInfo;
         const name:usersInterface|null = await userServices.getEntries.findByUsername(username)
         if (name==null){
             return res.status(404).json({ message: 'Username en uso' });
         } */
-        const user:usersInterface|null = await userServices.getEntries.create(req.body as usersInterface)
+        const user: usersInterface | null = await userServices.getEntries.create(req.body as usersInterface)
         console.log(user);
-        const token: string = jwt.sign({username: user.username,tipo: user.tipo}, process.env.SECRET || 'tokentest')
-        return res.header('auth-token', token).json({ user, token }); 
-    } catch(e){
+        const token: string = jwt.sign({ username: user.username, tipo: user.tipo }, process.env.SECRET || 'tokentest')
+        return res.header('auth-token', token).json({ user, token });
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to create user' });
     }
 }
@@ -103,41 +103,41 @@ export async function deleteUser(req: Request, res: Response): Promise<Response>
     }
 }
 
-export async function addFriend(req:Request,res:Response):Promise<Response> {
-    try{
-        const user:usersInterface|null = await userServices.getEntries.addFriend(req.params.name1,req.params.name2)
+export async function addFriend(req: Request, res: Response): Promise<Response> {
+    try {
+        const user: usersInterface | null = await userServices.getEntries.addFriend(req.params.name1, req.params.name2)
         return res.json(user);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to add friend' });
     }
 }
 
-export async function delFriend(req:Request,res:Response):Promise<Response> {
-    try{
-        const user:usersInterface|null = await userServices.getEntries.delFriend(req.params.name1,req.params.name2)
+export async function delFriend(req: Request, res: Response): Promise<Response> {
+    try {
+        const user: usersInterface | null = await userServices.getEntries.delFriend(req.params.name1, req.params.name2)
         return res.json(user);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to add friend' });
     }
 }
 
-export async function addSolicitud(req:Request,res:Response):Promise<Response> {
-    try{
+export async function addSolicitud(req: Request, res: Response): Promise<Response> {
+    try {
         console.log('Estamos aqui para el addsolicitud');
         console.log(req.params.name1, req.params.name2);
-        const user:usersInterface|null = await userServices.getEntries.addSolicitud(req.params.name1 as string,req.params.name2 as string)
+        const user: usersInterface | null = await userServices.getEntries.addSolicitud(req.params.name1 as string, req.params.name2 as string)
         console.log('Usuario:', user);
         return res.status(200).json(user);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to add friend' });
     }
 }
 
-export async function delSolicitud(req:Request,res:Response):Promise<Response> {
-    try{
-        const user:usersInterface|null = await userServices.getEntries.delSolicitud(req.params.name1,req.params.name2)
+export async function delSolicitud(req: Request, res: Response): Promise<Response> {
+    try {
+        const user: usersInterface | null = await userServices.getEntries.delSolicitud(req.params.name1, req.params.name2)
         return res.json(user);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to add friend' });
     }
 }
@@ -174,20 +174,19 @@ export async function findUserByName(req: Request, res: Response): Promise<Respo
     }
 }
 
-
-
 export async function getUserExperiences(req: Request, res: Response): Promise<Response> {
     try {
-        const user = await userServices.getEntries.findUserExperiences(req.user.id);
+        const user = await userServices.getEntries.findUserExperiences(req.user._id);
         console.log('User fetched:', user); // Verifica si se encuentra el usuario
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        return res.json({ experiences: user.experiences });
+        // Verifica que las experiencias estén correctamente pobladas
+        console.log('User experiences:', user.experiences);
+        return res.json({ experiences: user.experiences }); // Envía las experiencias completas al frontend
+
     } catch (error) {
-
         console.error('Failed to fetch user experiences:', error);
-
         return res.status(500).json({ error: 'Failed to fetch user experiences' });
     }
 }

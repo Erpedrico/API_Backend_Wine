@@ -1,6 +1,7 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 
 export interface usersInterface {
+    _id?: string,
     username: string,
     name: string,
     mail: string,
@@ -10,7 +11,7 @@ export interface usersInterface {
     habilitado: boolean,
     amigos: string[],
     solicitudes: string[],
-    experiences: Types.ObjectId[],
+    experiences: string[],
 }
 export type UsersInterfacePublicInfo = Pick<usersInterface, 'name' | 'comment'>
 export type UsersInterfacePrivateInfo = Pick<usersInterface, 'username' | 'password'>
@@ -28,7 +29,7 @@ export const usersSchema = new Schema<usersInterface>({
     habilitado: { type: Boolean, required: true, default: true },
     amigos: [{ type: String, required: true }],
     solicitudes: [{ type: String, required: true }],
-    experiences: [{ type: Schema.Types.ObjectId, ref: "experiencias", default: [] }],
+    experiences: [{ type: Schema.Types.ObjectId, ref: 'experiencias', default: [] }], // Relación con experiencias
 })
 
 export const usersofDB = model<usersInterface>('user', usersSchema)

@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-export interface wineInterface{
+export interface wineInterface {
     owner: string,
     name: string,
     price: number,
@@ -20,4 +20,4 @@ export const wineSchema = new Schema<wineInterface>({
     habilitado: Boolean
 })
 
-export const wineofDB = model<wineInterface>('wine',wineSchema)
+export const wineofDB = model<wineInterface>('wine', wineSchema)

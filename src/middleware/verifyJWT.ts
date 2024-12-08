@@ -4,6 +4,7 @@ import { handleHttp } from '../utils/error.handle'
 
 
 interface IPayload {
+    _id?: string;
     username: string;
     tipo: 'admin' | 'wineLover' | 'wineMaker';
     iat: number;

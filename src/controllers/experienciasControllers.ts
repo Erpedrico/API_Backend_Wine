@@ -36,6 +36,7 @@ export async function createExperiencias(req:Request,res:Response):Promise<Respo
     } catch(e){
         return res.status(500).json({ e: 'Failed to create experiencies' });
     }
+
 }
 
 export async function addParticipantToExperiencias(req:Request,res:Response):Promise<Response> {

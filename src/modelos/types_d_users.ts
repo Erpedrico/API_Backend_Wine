@@ -21,14 +21,14 @@ export interface usersfromDBInterface extends usersInterface {
 }
 
 export const usersSchema = new Schema<usersInterface>({
-    username: { type: String, required: true, unique: true },
-    name: { type: String, required: true },
-    mail: { type: String, required: true },
-    password: { type: String, required: true },
-    tipo: { type: String, required: true, enum: ['admin', 'wineLover', 'wineMaker'] },
+    username: { type: String, required: true, unique: true, default: '' },
+    name: { type: String, required: true, default: '' },
+    mail: { type: String, required: true, default: '' },
+    password: { type: String, required: true, default: '' },
+    tipo: { type: String, required: true, enum: ['admin', 'wineLover', 'wineMaker'], default: 'wineLover' },
     habilitado: { type: Boolean, required: true, default: true },
-    amigos: [{ type: String, required: true }],
-    solicitudes: [{ type: String, required: true }],
+    amigos: [{ type: String, required: true, default: [] }],
+    solicitudes: [{ type: String, required: true, default: [] }],
     experiences: [{ type: Schema.Types.ObjectId, ref: 'experiencias', default: [] }], // Relación con experiencias
 })
 

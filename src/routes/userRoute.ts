@@ -17,6 +17,10 @@ router.route('/:id')
     .put(TokenValidation, verifyOwnership, updateUser)
     .delete(TokenValidation, AdminValidation, deleteUser)
 
+router.route('/profile/:id')
+.get(TokenValidation, findUser)
+
+
 router.route('/all')
     .post(TokenValidation, AdminValidation, findAllUsers)
 

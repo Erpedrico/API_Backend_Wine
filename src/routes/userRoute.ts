@@ -43,4 +43,7 @@ router.route('/experiences/all')
 router.route('/findByUsername/:username')
     .get(findUserByUserName)
 
+router.route('/profile/:id')
+    .get(TokenValidation, findUser)
+
 export default router

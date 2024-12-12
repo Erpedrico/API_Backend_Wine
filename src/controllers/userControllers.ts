@@ -123,15 +123,23 @@ export async function delFriend(req: Request, res: Response): Promise<Response> 
 
 export async function addSolicitud(req: Request, res: Response): Promise<Response> {
     try {
-        console.log('Estamos aqui para el addsolicitud');
-        console.log(req.params.name1, req.params.name2);
-        const user: usersInterface | null = await userServices.getEntries.addSolicitud(req.params.name1 as string, req.params.name2 as string)
-        console.log('Usuario:', user);
+        console.log('Processing addSolicitud for:', req.params.name1, req.params.name2);
+        const user = await userServices.getEntries.addSolicitud(req.params.name1, req.params.name2);
+        console.log('Solicitud added for user:', user);
         return res.status(200).json(user);
-    } catch (e) {
-        return res.status(500).json({ e: 'Failed to add friend' });
+    } catch (error) {
+        if (error instanceof Error) { // Verifica que el error es una instancia de Error
+            if (error.message === 'User not found') {
+                console.error('Error in addSolicitud:', error.message);
+                return res.status(404).json({ message: 'User not found' });
+            }
+            console.error('Error in addSolicitud:', error.message);
+        }
+        return res.status(500).json({ message: 'Failed to add friend request' });
     }
 }
+
+
 
 export async function delSolicitud(req: Request, res: Response): Promise<Response> {
     try {

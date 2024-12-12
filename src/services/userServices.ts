@@ -51,25 +51,32 @@ export const getEntries = {
     delete: async (id: string): Promise<usersInterface | null> => {
         return await usersofDB.findByIdAndDelete(id);
     },
-    addFriend: async (name1: string, name2: string) => {
-        try {
-            // Añadir amigos a ambos usuarios
-            await usersofDB.findOneAndUpdate({ username: name2 }, { $addToSet: { amigos: name1 } });
-            await usersofDB.findOneAndUpdate({ username: name1 }, { $addToSet: { amigos: name2 } });
-
-            // Eliminar la solicitud automáticamente
-            await usersofDB.findOneAndUpdate({ username: name1 }, { $pull: { solicitudes: name2 } });
-        } catch (error) {
-            console.error('Error in addFriend:', error);
-            throw new Error('Failed to add friend');
-        }
+    addFriend: async (name1: string, name2: string): Promise<usersInterface | null> => {
+        // Añadir ambos usuarios como amigos
+        await usersofDB.findOneAndUpdate({ username: name2 }, { $addToSet: { amigos: name1 } });
+        const updatedUser = await usersofDB.findOneAndUpdate(
+            { username: name1 },
+            { $addToSet: { amigos: name2 } },
+            { new: true }
+        );
+        return updatedUser; // Devuelve el usuario actualizado
     },
     delFriend: async (name1: string, name2: string) => {
         await usersofDB.findOneAndUpdate({ username: name2 }, { $pull: { amigos: name1 } });
         return await usersofDB.findOneAndUpdate({ username: name1 }, { $pull: { amigos: name2 } });
     },
     addSolicitud: async (name1: string, name2: string) => {
-        return await usersofDB.findOneAndUpdate({ username: name1 }, { $addToSet: { solicitudes: name2 } }, { new: true });
+        // Verificar si el usuario objetivo existe
+        const targetUser = await usersofDB.findOne({ username: name1 });
+        if (!targetUser) {
+            throw new Error('User not found'); // Lanzar un error si el usuario no existe
+        }
+        // Agregar la solicitud al usuario objetivo
+        return await usersofDB.findOneAndUpdate(
+            { username: name1 },
+            { $addToSet: { solicitudes: name2 } },
+            { new: true } // Devuelve el documento actualizado
+        );
     },
     delSolicitud: async (name1: string, name2: string) => {
         return await usersofDB.findOneAndUpdate({ username: name1 }, { $pull: { solicitudes: name2 } });

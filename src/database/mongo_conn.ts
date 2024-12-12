@@ -5,12 +5,12 @@ import { connect, connection } from 'mongoose';
 //const connectionString = 'mongodb://localhost:27017/Prueba_1'
 //const connectionString = 'mongodb://mongo:27017/winer-db'
 export async function run() {
-    await connect('mongodb://mongo:27017/winer-db')
-    .then(()=>{
-        console.log('Database connected!!')
-    }) .catch((err)=>{
-        console.error(err)
-    });
+    await connect('mongodb://localhost:27017/Proyecto_Winners')
+        .then(() => {
+            console.log('Database connected!!')
+        }).catch((err) => {
+            console.error(err)
+        });
 
 }
 export function endConn() {

@@ -52,8 +52,17 @@ export const getEntries = {
         return await usersofDB.findByIdAndDelete(id);
     },
     addFriend: async (name1: string, name2: string) => {
-        await usersofDB.findOneAndUpdate({ username: name2 }, { $addToSet: { amigos: name1 } });
-        return await usersofDB.findOneAndUpdate({ username: name1 }, { $addToSet: { amigos: name2 } });
+        try {
+            // Añadir amigos a ambos usuarios
+            await usersofDB.findOneAndUpdate({ username: name2 }, { $addToSet: { amigos: name1 } });
+            await usersofDB.findOneAndUpdate({ username: name1 }, { $addToSet: { amigos: name2 } });
+
+            // Eliminar la solicitud automáticamente
+            await usersofDB.findOneAndUpdate({ username: name1 }, { $pull: { solicitudes: name2 } });
+        } catch (error) {
+            console.error('Error in addFriend:', error);
+            throw new Error('Failed to add friend');
+        }
     },
     delFriend: async (name1: string, name2: string) => {
         await usersofDB.findOneAndUpdate({ username: name2 }, { $pull: { amigos: name1 } });

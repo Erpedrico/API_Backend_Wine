@@ -52,8 +52,9 @@ export const getEntries = {
         return await usersofDB.findByIdAndDelete(id);
     },
     addFriend: async (name1: string, name2: string): Promise<usersInterface | null> => {
-        // Añadir ambos usuarios como amigos
         await usersofDB.findOneAndUpdate({ username: name2 }, { $addToSet: { amigos: name1 } });
+        await usersofDB.findOneAndUpdate({ username: name1 }, { $addToSet: { amigos: name2 } });
+
         const updatedUser = await usersofDB.findOneAndUpdate(
             { username: name1 },
             { $addToSet: { amigos: name2 } },

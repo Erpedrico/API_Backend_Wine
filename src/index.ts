@@ -19,7 +19,8 @@ app.use(cors({
 
 app.use(express.json() as RequestHandler);
 
-const PORT = 3000;
+//const PORT = 3000;
+const PORT = 5000;
 
 app.get('/ping', (_req , res) => {
     console.log('ping recivido correctamente')

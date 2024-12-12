@@ -3,7 +3,7 @@
 const mongoose = require ('mongoose')
 //import mongoose from 'mongoose'
 
-const connectionString = 'mongodb://localhost:27017/Prueba_1'
+const connectionString = 'mongodb://mongo:27017/winer-db'
 
 mongoose.connect(connectionString)
     .then(()=>{

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <script>
+        const socket = new WebSocket('http://localhost:3000');
+
+        socket.onopen = () => {
+            console.log('Conexión WebSocket abierta');
+            socket.send('Hola servidor');
+        };
+
+        socket.onmessage = (event) => {
+            console.log('Mensaje recibido del servidor:', event.data);
+        };
+
+        socket.onerror = (error) => {
+            console.error('Error en WebSocket:', error);
+        };
+
+        socket.onclose = () => {
+            console.log('Conexión WebSocket cerrada');
+        };
+    </script>
+</body>
+</html>

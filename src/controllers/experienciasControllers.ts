@@ -31,6 +31,7 @@ export async function findUsersFromExperiencias(req:Request,res:Response):Promis
 
 export async function createExperiencias(req:Request,res:Response):Promise<Response> {
     try{
+        console.log(req.body)
         const experiencias:experienciasInterface|null = await experienciasServices.getEntries.create(req.body as object)
         return res.status(200).json(experiencias)
     } catch(e){

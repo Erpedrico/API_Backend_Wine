@@ -2,13 +2,13 @@ import { experienciasInterface, experienciasofDB } from "../modelos/types_d_expe
 
 export const getEntries = {
     getAll: async()=>{
-    return await experienciasofDB.find().populate('owner').populate('participants');
+    return await experienciasofDB.find();
     },
     findById: async(id:string)=>{
         return await experienciasofDB.findById(id);
     },
     findUserById: async(id:string)=>{
-        return await experienciasofDB.findById(id).populate('owner').populate('participants');
+        return await experienciasofDB.findById(id);
     },
     addParticipant: async(idExp:string,idPart:string)=>{
         return await experienciasofDB.findByIdAndUpdate(idExp,{$addToSet:{participants:idPart}});
@@ -16,9 +16,17 @@ export const getEntries = {
     delParticipant: async(idExp:string,idPart:string)=>{
         return await experienciasofDB.findByIdAndUpdate(idExp,{$pull:{participants:idPart}});
     },
-    create: async(entry:object)=>{
-        return await experienciasofDB.create(entry);
+    create: async (entry: object) => {
+        try {
+            console.log("ESTE ES EL ENTRY", entry);  // Mejor visualización del objeto con coma
+            const newExperiencia = await experienciasofDB.create(entry);
+            return newExperiencia;  // Devuelves la instancia recién creada si es exitosa
+        } catch (error) {
+            console.error("Error creating experience:", error);  // Captura cualquier error
+            throw new Error('Error al crear la experiencia');  // Lanza un error para manejarlo en el controlador
+        }
     },
+    
     update: async(id:string,body:object)=>{
         console.log(body);
         return await experienciasofDB.findByIdAndUpdate(id,body,{$new:true});

@@ -68,4 +68,8 @@ export const getEntries = {
     findUserExperiences: async (id: string) => {
         return await usersofDB.findById(id).populate('experiences').exec();
     },
+    addExperiencia: async(idExp:string,idPart:string)=>{
+            return await usersofDB.findByIdAndUpdate(idPart,{$addToSet:{experiences:idExp}});
+    },
+    
 }

@@ -39,14 +39,25 @@ export async function createExperiencias(req:Request,res:Response):Promise<Respo
     }
 }
 
-export async function addParticipantToExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencias:experienciasInterface|null = await experienciasServices.getEntries.addParticipant(req.params.idExp,req.params.idPart)
-        return res.json(experiencias);
-    } catch(e){
-        return res.status(500).json({ e: 'Failed to add participant' });
+export async function addParticipantToExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        // Llama al servicio para añadir el participante a la experiencia
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.addParticipant(
+            req.params.idExp,
+            req.params.idPart
+        );
+
+        if (!experiencias) {
+            return res.status(404).json({ message: 'Experience not found' }); // Verifica si la experiencia existe
+        }
+
+        return res.json(experiencias); // Devuelve la experiencia actualizada
+    } catch (error) {
+        console.error('Error adding participant:', error); // Log para depuración
+        return res.status(500).json({ message: 'Failed to add participant' });
     }
 }
+
 
 export async function updateExperiencias(req:Request,res:Response):Promise<Response> {
     try{

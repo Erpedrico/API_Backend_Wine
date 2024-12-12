@@ -199,3 +199,32 @@ export async function findUserByUserName(req: Request, res: Response): Promise<R
         return res.status(500).json({ e: 'Failed to find user' });
     }
 }
+/*
+export async function addExperienciaToParticipant(req:Request,res:Response):Promise<Response> {
+    try{
+        const user:usersInterface|null = await userServices.getEntries.addExperiencia(req.params.idExp,req.params.idPart)
+        return res.json(user);
+    } catch(e){
+        return res.status(500).json({ e: 'Failed to add exp' });
+    }
+}*/
+
+export async function addExperienciaToParticipant(req: Request, res: Response): Promise<Response> {
+    try {
+        // Llama al servicio para añadir la experiencia al usuario
+        const user: usersInterface | null = await userServices.getEntries.addExperiencia(
+            req.params.idExp, // ID de la experiencia
+            req.params.idPart // ID del participante
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' }); // Verifica si el usuario existe
+        }
+
+        return res.status(200).json(user); // Devuelve el usuario actualizado
+    } catch (error) {
+        console.error('Error adding experience to participant:', error); // Log para depuración
+        return res.status(500).json({ message: 'Failed to add experience to participant' });
+    }
+}
+

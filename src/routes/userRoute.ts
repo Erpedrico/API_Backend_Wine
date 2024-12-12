@@ -1,5 +1,5 @@
 import express from 'express'
-import { addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findUser, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByName, findUserByUserName } from '../controllers/userControllers'
+import { addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findUser, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByName, findUserByUserName, addExperienciaToParticipant } from '../controllers/userControllers'
 import { TokenValidation } from '../middleware/verifyJWT'
 import { verifyOwnership } from '../middleware/verifyOwner'
 import { AdminValidation } from '../middleware/verifyAdmin'
@@ -46,4 +46,7 @@ router.route('/findByUsername/:username')
 router.route('/profile/:id')
     .get(TokenValidation, findUser)
 
+router.route('/addExpToPart/:idExp/:idPart')
+        .post(addExperienciaToParticipant)
+        
 export default router

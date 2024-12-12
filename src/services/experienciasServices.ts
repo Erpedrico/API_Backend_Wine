@@ -10,9 +10,22 @@ export const getEntries = {
     findUserById: async(id:string)=>{
         return await experienciasofDB.findById(id);
     },
-    addParticipant: async(idExp:string,idPart:string)=>{
-        return await experienciasofDB.findByIdAndUpdate(idExp,{$addToSet:{participants:idPart}});
+    addParticipant: async (idExp: string, idPart: string) => {
+        try {
+            // Usa $addToSet para evitar duplicados
+            const updatedExperience = await experienciasofDB.findByIdAndUpdate(
+                idExp,
+                { $addToSet: { participants: idPart } },
+                { new: true } // Devuelve el documento actualizado
+            );
+    
+            return updatedExperience;
+        } catch (error) {
+            console.error('Error in addParticipant service:', error); // Log para depuración
+            throw error;
+        }
     },
+    
     delParticipant: async(idExp:string,idPart:string)=>{
         return await experienciasofDB.findByIdAndUpdate(idExp,{$pull:{participants:idPart}});
     },

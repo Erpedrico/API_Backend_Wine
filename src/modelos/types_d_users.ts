@@ -21,7 +21,6 @@ export interface usersfromDBInterface extends usersInterface {
 }
 
 export const usersSchema = new Schema<usersInterface>({
-    _id: { type: String, required: true, unique: true, default: '' },
     username: { type: String, required: true, unique: true, default: '' },
     name: { type: String, required: true, default: '' },
     mail: { type: String, required: true, default: '' },

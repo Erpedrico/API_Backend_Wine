@@ -12,6 +12,7 @@ export interface usersInterface {
     amigos: string[],
     solicitudes: string[],
     experiences: string[],
+    googleId?: string; // Add this line
 }
 export type UsersInterfacePublicInfo = Pick<usersInterface, 'name' | 'comment'>
 export type UsersInterfacePrivateInfo = Pick<usersInterface, 'username' | 'password'>
@@ -30,6 +31,7 @@ export const usersSchema = new Schema<usersInterface>({
     amigos: [{ type: String, required: true, default: [] }],
     solicitudes: [{ type: String, required: true, default: [] }],
     experiences: [{ type: Schema.Types.ObjectId, ref: 'experiencias', default: [] }], // Relación con experiencias
+    googleId: { type: String, unique: true, sparse: true }, // Add this line
 })
 
 export const usersofDB = model<usersInterface>('user', usersSchema)

@@ -1,5 +1,4 @@
 import { usersInterface, usersfromDBInterface, usersofDB } from '../modelos/types_d_users'
-//import userData from './users.json'
 
 export const getEntries = {
     getAll: async (num1: number, num2: number): Promise<usersInterface[]> => {
@@ -88,5 +87,25 @@ export const getEntries = {
     addExperiencia: async(idExp:string,idPart:string)=>{
             return await usersofDB.findByIdAndUpdate(idPart,{$addToSet:{experiences:idExp}});
     },
-    
+    findOrCreateGoogleUser: async (profile: any): Promise<usersInterface> => {
+        let user = await usersofDB.findOne({ googleId: profile.sub });
+        if (!user) {
+            user = await usersofDB.findOne({ mail: profile.email });
+        }
+        if (!user) {
+            user = await usersofDB.create({
+                username: profile.email,
+                name: profile.name,
+                mail: profile.email,
+                googleId: profile.sub,
+                password: '', // No password for Google users
+                tipo: 'wineLover',
+                habilitado: true,
+                amigos: [],
+                solicitudes: [],
+                experiences: []
+            });
+        }
+        return user;
+    }
 }

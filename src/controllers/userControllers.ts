@@ -6,6 +6,9 @@ import * as wineServices from '../services/wineServices'
 import { Request, Response } from 'express'
 
 import jwt from 'jsonwebtoken'
+import { OAuth2Client } from 'google-auth-library';
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export async function findAllUsers(req: Request, res: Response): Promise<Response> {
     try {
@@ -62,6 +65,25 @@ export async function logIn(req: Request, res: Response): Promise<Response> {
     } catch (e) {
         // Si ocurre un error, se maneja con un error 500
         return res.status(500).json({ e: 'Failed to find user' });
+    }
+}
+
+export async function reactGoogleLogin(req: Request, res: Response): Promise<Response> {
+    try {
+        const { token } = req.body;
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+        const payload = ticket.getPayload();
+        if (!payload) {
+            return res.status(400).json({ message: 'Invalid Google token' });
+        }
+        const user = await userServices.getEntries.findOrCreateGoogleUser(payload);
+        const jwtToken = jwt.sign({ _id: user._id, username: user.username, tipo: user.tipo }, process.env.SECRET || 'tokentest');
+        return res.json({ user, token: jwtToken });
+    } catch (e) {
+        return res.status(500).json({ e: 'Failed to login with Google' });
     }
 }
 

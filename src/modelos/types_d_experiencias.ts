@@ -1,6 +1,5 @@
 import { model, Schema, Types } from "mongoose";
 import { Service } from "./type_d_services";
-// import { generateRandomRating } from "../utils/randomrating";
 
 export interface experienciasInterface {
     title: string;
@@ -11,19 +10,13 @@ export interface experienciasInterface {
     location: string;
     contactnumber: number;
     contactmail: string;
-    rating: {
-        type: number,
-        required: true,
-        min: 0,
-        max: 5,
-    }
+    rating:  number // Array of rating objects
     reviews: Types.ObjectId[]; // Array of review references
     date: string;
     services: Service[]; // Array of services
 }
-// const generateRandomRating = () => { return Math.round((Math.random() * 5) * 10) / 10; };
 
-export const experienciasSchema = new Schema<experienciasInterface>({
+const experienciasSchema = new Schema<experienciasInterface>({
     title: { type: String, required: true },
     owner: { type: Schema.Types.ObjectId, ref: "user", required: true },
     participants: [{ type: Schema.Types.ObjectId, ref: "user" }],
@@ -32,7 +25,7 @@ export const experienciasSchema = new Schema<experienciasInterface>({
     location: { type: String, required: true },
     contactnumber: { type: Number, required: true },
     contactmail: { type: String, required: true },
-    rating: { type: Number, default: 0, required: true },
+    rating: { type: Number },
     reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }],
     date: { type: String, required: true },
     services: [
@@ -41,6 +34,7 @@ export const experienciasSchema = new Schema<experienciasInterface>({
             label: { type: String, required: true },
         },
     ],
-});
+  });
 
 export const experienciasofDB = model<experienciasInterface>('experiencias', experienciasSchema);
+

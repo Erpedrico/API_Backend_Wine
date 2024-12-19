@@ -111,14 +111,20 @@ export async function updateRating(req: Request, res: Response): Promise<Respons
     try {
         const { id } = req.params; // ID de la experiencia
         const { rating } = req.body; // Puntuación enviada por el frontend
+        const { userId } = req.user; // Supongamos que el `userId` está en `req.user` gracias a un middleware de autenticación
 
         // Validación: El rating debe ser un número entre 0 y 5
         if (typeof rating !== 'number' || rating < 0 || rating > 5) {
             return res.status(400).json({ message: 'El rating debe ser un número entre 0 y 5' });
         }
 
+        // Validación: Asegúrate de que el `userId` esté presente
+        if (!userId) {
+            return res.status(400).json({ message: 'Se requiere un usuario autenticado' });
+        }
+
         // Actualizar el rating en la base de datos
-        const updatedExperience = await experienciasServices.getEntries.updateRating(id, rating);
+        const updatedExperience = await experienciasServices.getEntries.updateRating(id, userId, rating);
 
         if (updatedExperience) {
             return res.status(200).json(updatedExperience);

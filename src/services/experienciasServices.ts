@@ -1,4 +1,5 @@
 import { experienciasInterface, experienciasofDB } from "../modelos/types_d_experiencias";
+import { Types } from 'mongoose';
 
 
 export const getEntries = {
@@ -60,17 +61,28 @@ export const getEntries = {
         return await experienciasofDB.findOneAndDelete({ owner: id }).exec();
     },
 
-    updateRating: async (id: string, rating: number): Promise<experienciasInterface | null> => {
+    updateRating: async (id: string, userId: string, value: number): Promise<experienciasInterface | null> => {
         try {
-            return await experienciasofDB.findByIdAndUpdate(
-                id,
-                { rating },
-                { new: true } // Devuelve la experiencia actualizada
+            const experience = await experienciasofDB.findById(id);
+    
+            if (!experience) throw new Error('Experience not found');
+    
+            const existingRatingIndex = experience.rating.findIndex(
+                (rating) => rating.user.toString() === userId
             );
+    
+            if (existingRatingIndex !== -1) {
+                experience.rating[existingRatingIndex].value = value;
+            } else {
+                experience.rating.push({ user: new Types.ObjectId(userId), value });
+            }
+    
+            experience.calculateAverageRating(); // Calcular la calificación promedio
+            await experience.save();
+    
+            return experience;
         } catch (error) {
             console.error('Error updating rating:', error);
-            throw error;
         }
-    },
-
+    }
 }

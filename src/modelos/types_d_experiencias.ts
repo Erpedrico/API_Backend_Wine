@@ -1,6 +1,5 @@
 import { model, Schema, Types } from "mongoose";
 import { Service } from "./type_d_services";
-// import { generateRandomRating } from "../utils/randomrating";
 
 export interface experienciasInterface {
     title: string;
@@ -11,15 +10,14 @@ export interface experienciasInterface {
     location: string;
     contactnumber: number;
     contactmail: string;
-    rating: {
-        type: number,
-        required: true,
-        min: 0,
-        max: 5,
-    }
+    ratings: {  // Array to store individual ratings (from users)
+        user: Types.ObjectId;  // ID of the user who rated
+        value: number;          // Rating value (0-5)
+    }[]; 
     reviews: Types.ObjectId[]; // Array of review references
     date: string;
     services: Service[]; // Array of services
+    averageRating: number;  // Average rating (optional)
 }
 // const generateRandomRating = () => { return Math.round((Math.random() * 5) * 10) / 10; };
 
@@ -32,7 +30,6 @@ export const experienciasSchema = new Schema<experienciasInterface>({
     location: { type: String, required: true },
     contactnumber: { type: Number, required: true },
     contactmail: { type: String, required: true },
-    rating: { type: Number, default: 0, required: true },
     reviews: [{ type: Schema.Types.ObjectId, ref: "reviews" }],
     date: { type: String, required: true },
     services: [
@@ -41,6 +38,13 @@ export const experienciasSchema = new Schema<experienciasInterface>({
             label: { type: String, required: true },
         },
     ],
+    ratings: [  // This stores individual ratings
+        {
+            user: { type: Schema.Types.ObjectId, ref: "user", required: true },
+            value: { type: Number, min: 0, max: 5, required: true },  // Value between 0-5
+        },
+    ],
+    averageRating: { type: Number, default: 0, required: true }, // Optional: Field for average rating
 });
 
 export const experienciasofDB = model<experienciasInterface>('experiencias', experienciasSchema);

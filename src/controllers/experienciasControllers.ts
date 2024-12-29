@@ -108,6 +108,11 @@ export async function toggleHabilitacionExperiencias(req: Request, res: Response
     }
 }
 
+
+
+
+
+
 export async function addRatingToExperience(req: Request, res: Response): Promise<Response> {
     try {
         // Acceder a los parámetros de la URL
@@ -115,9 +120,9 @@ export async function addRatingToExperience(req: Request, res: Response): Promis
 
         // Acceder al rating del cuerpo de la solicitud
         const { ratingValue } = req.body;  // Valor de la valoración que se pasa en el cuerpo de la petición
-        console.log(ratingValue)
+
         // Verificar que los datos de la valoración son válidos
-        if (ratingValue == null || ratingValue < 0 || ratingValue > 5) {
+        if (ratingValue == null || ratingValue < 0 || ratingValue > 5 ) {
             return res.status(400).json({ message: "Rating value must be between 0 and 5" });
         }
 
@@ -128,11 +133,12 @@ export async function addRatingToExperience(req: Request, res: Response): Promis
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Llamar al servicio para añadir la valoración con el objeto completo de usuario
+        // Llamar al servicio para añadir la valoración
         const experience = await experienciasServices.getEntries.addRating(experienceId, userId, ratingValue);
 
         if (!experience) {
-            return res.status(404).json({ message: "Experience not found or already rated by this user" });
+            // En caso de que el usuario ya haya valorado la experiencia, devolver un error
+            return res.status(400).json({ message: "User has already rated this experience" });
         }
 
         return res.status(200).json({ message: "Rating added successfully", experience });
@@ -145,6 +151,7 @@ export async function addRatingToExperience(req: Request, res: Response): Promis
         return res.status(500).json({ message: 'Failed to add rating to experience', error: errorMessage });
     }
 }
+
 
 
 

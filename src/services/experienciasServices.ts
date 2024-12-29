@@ -57,15 +57,13 @@ export const getEntries = {
 
     
     // Función para añadir una valoración a una experiencia
-addRating: async (experienceId: string, user: any, ratingValue: number): Promise<experienciasInterface | null> => {
+    addRating: async (experienceId: string, user: any, ratingValue: number): Promise<experienciasInterface | null> => {
     try {
         // Buscar la experiencia por ID
         const experience = await experienciasofDB.findById(experienceId);
         if (!experience) {
             return null;  // Si no se encuentra la experiencia, devolvemos null
         }
-
-        
 
         // Agregar la nueva valoración con el objeto completo de usuario
         experience.ratings.push({ user: user, value: ratingValue });
@@ -82,11 +80,9 @@ addRating: async (experienceId: string, user: any, ratingValue: number): Promise
         await experience.save();
 
         return experience;  // Devolvemos la experiencia actualizada
-    } catch (error) {
-        console.error('Error adding rating in service:', error);
-        throw new Error('Failed to add rating');
-    }
-},
-
-    
+        } catch (error) {
+            console.error('Error adding rating in service:', error);
+            throw new Error('Failed to add rating');
+        }
+    },
 }

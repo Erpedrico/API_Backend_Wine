@@ -25,7 +25,7 @@ export async function createWine(req:Request,res:Response):Promise<Response> {
         const wine:wineInterface|null = await wineServices.getEntries.create(req.body as object)
         return res.status(200).json(wine)
     } catch(e){
-        return res.status(500).json({ e: 'Failed to create user' });
+        return res.status(500).json({ e: 'Failed to create wine' });
     }
 }
 

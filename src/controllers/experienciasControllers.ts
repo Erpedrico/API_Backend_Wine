@@ -1,6 +1,7 @@
 import { experienciasInterface } from '../modelos/types_d_experiencias'
 import * as experienciasServices from '../services/experienciasServices'
 import { Request, Response } from 'express'
+import * as userServices from '../services/userServices'
 
 export async function findAllExperiencias(_req: Request, res: Response): Promise<Response> {
     try {
@@ -107,32 +108,42 @@ export async function toggleHabilitacionExperiencias(req: Request, res: Response
     }
 }
 
-export async function updateRating(req: Request, res: Response): Promise<Response> {
+export async function addRatingToExperience(req: Request, res: Response): Promise<Response> {
     try {
-        const { id } = req.params; // ID de la experiencia
-        const { rating } = req.body; // Puntuación enviada por el frontend
-        const { userId } = req.user; // Supongamos que el `userId` está en `req.user` gracias a un middleware de autenticación
+        // Acceder a los parámetros de la URL
+        const { experienceId, userId } = req.params;  // Tomamos los parámetros de la URL
 
-        // Validación: El rating debe ser un número entre 0 y 5
-        if (typeof rating !== 'number' || rating < 0 || rating > 5) {
-            return res.status(400).json({ message: 'El rating debe ser un número entre 0 y 5' });
+        // Acceder al rating del cuerpo de la solicitud
+        const { ratingValue } = req.body;  // Valor de la valoración que se pasa en el cuerpo de la petición
+
+        // Verificar que los datos de la valoración son válidos
+        if (ratingValue == null || ratingValue < 0 || ratingValue > 5 ) {
+            return res.status(400).json({ message: "Rating value must be between 0 and 5" });
         }
 
-        // Validación: Asegúrate de que el `userId` esté presente
-        if (!userId) {
-            return res.status(400).json({ message: 'Se requiere un usuario autenticado' });
+        // Buscar el objeto completo del usuario usando su ID
+        const user = await userServices.getEntries.findById(userId); // Asegúrate de tener un método getById que te devuelva el objeto de usuario
+
+        if (!user) {
+            console.log('usuer not found')
+            return res.status(404).json({ message: "User not found" });
         }
 
-        // Actualizar el rating en la base de datos
-        const updatedExperience = await experienciasServices.getEntries.updateRating(id, userId, rating);
+        // Llamar al servicio para añadir la valoración
+        const experience = await experienciasServices.getEntries.addRating(experienceId, userId, ratingValue);
 
-        if (updatedExperience) {
-            return res.status(200).json(updatedExperience);
-        } else {
-            return res.status(404).json({ message: 'Experiencia no encontrada' });
+        if (!experience) {
+            // En caso de que el usuario ya haya valorado la experiencia, devolver un error
+            return res.status(400).json({ message: "User has already rated this experience" });
         }
+
+        return res.status(200).json({ message: "Rating added successfully", experience });
     } catch (error) {
-        console.error('Error updating rating:', error);
-        return res.status(500).json({ message: 'Error al actualizar el rating' });
+        console.error('Error adding rating:', error);
+
+        // Verificar si el error tiene un mensaje
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+        return res.status(500).json({ message: 'Failed to add rating to experience', error: errorMessage });
     }
 }

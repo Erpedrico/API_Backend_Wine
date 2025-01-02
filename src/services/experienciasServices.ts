@@ -1,6 +1,5 @@
 import { experienciasInterface, experienciasofDB } from "../modelos/types_d_experiencias";
-import { Types } from 'mongoose';
-
+import mongoose from "mongoose";
 
 export const getEntries = {
 
@@ -61,28 +60,41 @@ export const getEntries = {
         return await experienciasofDB.findOneAndDelete({ owner: id }).exec();
     },
 
-    updateRating: async (id: string, userId: string, value: number): Promise<experienciasInterface | null> => {
+    addRating: async (experienceId: string, userId: string, ratingValue: number): Promise<experienciasInterface | null> => {
         try {
-            const experience = await experienciasofDB.findById(id);
-    
-            if (!experience) throw new Error('Experience not found');
-    
-            const existingRatingIndex = experience.rating.findIndex(
-                (rating) => rating.user.toString() === userId
-            );
-    
-            if (existingRatingIndex !== -1) {
-                experience.rating[existingRatingIndex].value = value;
-            } else {
-                experience.rating.push({ user: new Types.ObjectId(userId), value });
+            // Buscar la experiencia por ID
+            const experience = await experienciasofDB.findById(experienceId);
+            if (!experience) {
+                return null; // Si no se encuentra la experiencia, devolvemos null
             }
-    
-            experience.calculateAverageRating(); // Calcular la calificación promedio
+
+            // Convertir userId a ObjectId
+            const userObjectId = new mongoose.Types.ObjectId(userId);
+
+            // Verificar si el usuario ya ha votado
+            const existingRatingIndex = experience.ratings.findIndex((rating: any) => rating.user.toString() === userId);
+
+            if (existingRatingIndex !== -1) {
+                // Actualizar la puntuación existente
+                experience.ratings[existingRatingIndex].value = ratingValue;
+            } else {
+                // Agregar una nueva puntuación
+                experience.ratings.push({ user: userObjectId, value: ratingValue });
+            }
+
+            // Calcular el promedio de las valoraciones
+            const totalRatings = experience.ratings.length;
+            const sumRatings = experience.ratings.reduce((acc: number, rating: any) => acc + rating.value, 0);
+            experience.averageRating = sumRatings / totalRatings;
+
+            // Guardar la experiencia con la valoración actualizada
             await experience.save();
-    
-            return experience;
+
+            return experience; // Devolver la experiencia actualizada
         } catch (error) {
-            console.error('Error updating rating:', error);
+            console.error('Error adding rating in service:', error);
+            throw new Error('Failed to add rating');
         }
     }
+
 }

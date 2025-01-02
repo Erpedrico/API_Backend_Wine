@@ -1,5 +1,5 @@
 import express from 'express'
-import { addParticipantToExperiencias, createExperiencias, deleteExperiencias, delParticipantToExperiencias, findAllExperiencias, findExperiencias, findUsersFromExperiencias, toggleHabilitacionExperiencias, updateExperiencias, updateRating } from '../controllers/experienciasControllers'
+import { addParticipantToExperiencias, addRatingToExperience, createExperiencias, deleteExperiencias, delParticipantToExperiencias, findAllExperiencias, findExperiencias, findUsersFromExperiencias, updateExperiencias } from '../controllers/experienciasControllers'
 
 //import toNewUser from '../extras/utils'
 
@@ -22,11 +22,11 @@ router.route('/Participant/:idExp/:idPart')
     .post(addParticipantToExperiencias)
     .delete(delParticipantToExperiencias)    
 
-router.route('/:id/habilitacion')
-    .patch(toggleHabilitacionExperiencias)
+/*router.route('/:id/habilitacion')
+    .patch(toggleHabilitacionExperiencias)*/
 
-router.route('/:id/ratings')
-    .patch(updateRating)
+router.route('/rate/:experienceId/:userId')
+    .post(addRatingToExperience);
 
 
 export default router

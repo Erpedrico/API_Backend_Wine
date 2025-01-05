@@ -1,5 +1,17 @@
 import { experienciasInterface, experienciasofDB } from "../modelos/types_d_experiencias";
 
+// Función para buscar si el usuario ya tiene un rating en una experiencia
+export const findRatingByUser = async (experienceId: string, userId: string) => {
+    const experience = await experienciasofDB.findById(experienceId);
+    if (!experience) {
+        return null;
+    }
+
+    // Buscar si el rating del usuario existe en la experiencia
+    const existingRating = experience.ratings.find(rating => rating.user._id.toString() === userId);
+    return existingRating ? existingRating : null;
+};
+
 export const getEntries = {
     getAll: async()=>{
     return await experienciasofDB.find();
@@ -54,32 +66,40 @@ export const getEntries = {
         return await experienciasofDB.findOneAndDelete({owner:id}).exec();
     },
 
+    
+
 
     
     // Función para añadir una valoración a una experiencia
     addRating: async (experienceId: string, user: any, ratingValue: number): Promise<experienciasInterface | null> => {
-    try {
-        // Buscar la experiencia por ID
-        const experience = await experienciasofDB.findById(experienceId);
-        if (!experience) {
-            return null;  // Si no se encuentra la experiencia, devolvemos null
-        }
+        try {
+            // Verificar si el usuario ya ha valorado la experiencia
+            const existingRating = await findRatingByUser(experienceId, user._id);
+            if (existingRating) {
+                return null;  // Si el rating ya existe, devolvemos null
+            }
 
-        // Agregar la nueva valoración con el objeto completo de usuario
-        experience.ratings.push({ user: user, value: ratingValue });
+            // Buscar la experiencia por ID
+            const experience = await experienciasofDB.findById(experienceId);
+            if (!experience) {
+                return null;  // Si no se encuentra la experiencia, devolvemos null
+            }
 
-        // Calcular el promedio de las valoraciones
-        const totalRatings = experience.ratings.length;
-        const sumRatings = experience.ratings.reduce((acc, rating) => acc + rating.value, 0);
-        const averageRating = sumRatings / totalRatings;
+            // Agregar la nueva valoración con el objeto completo de usuario
+            experience.ratings.push({ user: user, value: ratingValue });
 
-        // Actualizar el campo 'averageRating' con el nuevo promedio calculado
-        experience.averageRating = averageRating;
+            // Calcular el promedio de las valoraciones
+            const totalRatings = experience.ratings.length;
+            const sumRatings = experience.ratings.reduce((acc, rating) => acc + rating.value, 0);
+            const averageRating = sumRatings / totalRatings;
 
-        // Guardar la experiencia con la nueva valoración y el promedio actualizado
-        await experience.save();
+            // Actualizar el campo 'averageRating' con el nuevo promedio calculado
+            experience.averageRating = averageRating;
 
-        return experience;  // Devolvemos la experiencia actualizada
+            // Guardar la experiencia con la nueva valoración y el promedio actualizado
+            await experience.save();
+
+            return experience;  // Devolvemos la experiencia actualizada
         } catch (error) {
             console.error('Error adding rating in service:', error);
             throw new Error('Failed to add rating');

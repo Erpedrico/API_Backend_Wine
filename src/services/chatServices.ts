@@ -4,6 +4,17 @@ import { roomsofDB } from '../modelos/type_d_room';
 
 const connectedUsers = new Set();
 
+// Guardar mensaje en la base de datos
+export const saveMessage = async (room: string, username: string, content: string) => {
+  const newMessage = new messagesofDB({
+    room,
+    username,
+    content,
+  });
+
+  return await newMessage.save();
+};
+
 const socketService = (io: Server) => {
   io.on('connection', (socket) => {
     console.log('Connected successfully', socket.id);
@@ -25,7 +36,6 @@ const socketService = (io: Server) => {
 
       // Obtener mensajes previos de la sala
       const previousMessages = await messagesofDB.find({ room: roomName }).sort({ timestamp: 1 });
-      console.log(previousMessages);
       socket.emit('previousMessages', previousMessages);
 
       // Notificar a la sala sobre el nuevo usuario
@@ -33,11 +43,15 @@ const socketService = (io: Server) => {
     });
 
     // Manejar envío de mensajes
-    socket.on('sendMessage', async (data: { roomName: string; message: string }) => {
-      const { roomName, message } = data;
+    socket.on('sendMessage', async (data: { roomName: string; username: string; content: string }) => {
+      const { roomName, username, content } = data;
 
       // Guardar el mensaje en la base de datos
-      const newMessage = new messagesofDB({ room: roomName, content: message });
+      const newMessage = new messagesofDB({
+        room: roomName,
+        username: username,
+        content: content,
+      });
       await newMessage.save();
 
       // Emitir el mensaje a todos en la sala

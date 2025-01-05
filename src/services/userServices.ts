@@ -82,9 +82,11 @@ export const getEntries = {
     delSolicitud: async (name1: string, name2: string) => {
         return await usersofDB.findOneAndUpdate({ username: name1 }, { $pull: { solicitudes: name2 } });
     },
+    
     findUserExperiences: async (id: string) => {
         return await usersofDB.findById(id).populate('experiences').exec();
     },
+
     addExperiencia: async(idExp:string,idPart:string)=>{
             return await usersofDB.findByIdAndUpdate(idPart,{$addToSet:{experiences:idExp}});
     },

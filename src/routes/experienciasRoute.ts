@@ -1,5 +1,5 @@
 import express from 'express'
-import { addParticipantToExperiencias, addRatingToExperience, createExperiencias, deleteExperiencias, delParticipantToExperiencias, findAllExperiencias, findExperiencias, findUsersFromExperiencias, updateExperiencias } from '../controllers/experienciasControllers'
+import { getRatingsForExperience, addParticipantToExperiencias, addRatingToExperience, createExperiencias, deleteExperiencias, delParticipantToExperiencias, findAllExperiencias, findExperiencias, findUsersFromExperiencias, updateExperiencias } from '../controllers/experienciasControllers'
 
 //import toNewUser from '../extras/utils'
 
@@ -29,5 +29,7 @@ router.route('/Participant/:idExp/:idPart')
 router.route('/rate/:experienceId/:userId')
   .post(addRatingToExperience);
 
+router.route('/ratings/:idRating')
+  .get(getRatingsForExperience) 
 
 export default router

@@ -13,6 +13,7 @@ export interface experienciasInterface {
     ratings: {  // Array to store individual ratings (from users)
         user: Types.ObjectId;  // ID of the user who rated
         value: number;          // Rating value (0-5)
+        comment: string; // Incluye el comentario
     }[]; 
     reviews: Types.ObjectId[]; // Array of review references
     date: string;
@@ -42,6 +43,8 @@ export const experienciasSchema = new Schema<experienciasInterface>({
         {
             user: { type: Schema.Types.ObjectId, ref: "user", required: true },
             value: { type: Number, min: 0, max: 5, required: true },  // Value between 0-5
+            comment: { type: String, required: true }, // Asegúrate de requerir el comentario
+
         },
     ],
     averageRating: { type: Number, default: 0, required: true }, // Optional: Field for average rating

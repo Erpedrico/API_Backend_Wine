@@ -110,42 +110,63 @@ export async function toggleHabilitacionExperiencias(req: Request, res: Response
 
 export async function addRatingToExperience(req: Request, res: Response): Promise<Response> {
     try {
-        // Acceder a los parámetros de la URL
-        const { experienceId, userId } = req.params;  // Tomamos los parámetros de la URL
+        const { experienceId, userId } = req.params;
+        const { ratingValue, comment } = req.body; // Incluye el comentario desde el cuerpo de la solicitud
 
-        // Acceder al rating del cuerpo de la solicitud
-        const { ratingValue } = req.body;  // Valor de la valoración que se pasa en el cuerpo de la petición
-
-        // Verificar que los datos de la valoración son válidos
-        if (ratingValue == null || ratingValue < 0 || ratingValue > 5 ) {
+        // Validar la puntuación y el comentario
+        if (ratingValue == null || ratingValue < 0 || ratingValue > 5) {
             return res.status(400).json({ message: "Rating value must be between 0 and 5" });
         }
+        if (!comment || comment.trim() === "") {
+            return res.status(400).json({ message: "Comment is required" });
+        }
 
-        // Buscar el objeto completo del usuario usando su ID
-        const user = await userServices.getEntries.findById(userId); // Asegúrate de tener un método getById que te devuelva el objeto de usuario
-
+        // Verificar que el usuario existe
+        const user = await userServices.getEntries.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Verificar si el usuario ya ha valorado esta experiencia
+        // Verificar si el usuario ya ha valorado la experiencia
         const existingRating = await experienciasServices.findRatingByUser(experienceId, userId);
-
         if (existingRating) {
-            // Si ya existe un rating del mismo usuario para esta experiencia
             return res.status(400).json({ message: "User has already rated this experience" });
         }
 
-        // Llamar al servicio para añadir la valoración
-        const experience = await experienciasServices.getEntries.addRating(experienceId, userId, ratingValue);
+        // Añadir la valoración con el comentario
+        const experience = await experienciasServices.getEntries.addRating(
+            experienceId,
+            user,
+            ratingValue,
+            comment // Pasa el comentario al servicio
+        );
 
-        return res.status(200).json({ message: "Rating added successfully", experience });
+        return res.status(200).json({ message: "Rating and comment added successfully", experience });
     } catch (error) {
-        console.error('Error adding rating:', error);
-
-        // Verificar si el error tiene un mensaje
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-
-        return res.status(500).json({ message: 'Failed to add rating to experience', error: errorMessage });
+        console.error("Error adding rating:", error);
+        const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+        return res.status(500).json({ message: "Failed to add rating to experience", error: errorMessage });
     }
 }
+
+// Función para obtener las valoraciones de una experiencia
+export async function getRatingsForExperience(req: Request, res: Response): Promise<Response> {
+    const { id } = req.params; // Obtener el id de la experiencia desde los parámetros
+
+    try {
+        // Llamamos a la función que obtiene las valoraciones
+        const ratings = await experienciasServices.getEntries.getRatingsByExperience(id);
+
+        if (!ratings) {
+            return res.status(404).json({ message: 'No ratings found for this experience' });
+        }
+
+        // Si las valoraciones existen, las devolvemos
+        return res.status(200).json(ratings);
+    } catch (error) {
+        console.error('Error fetching ratings:', error);
+        return res.status(500).json({ message: 'Failed to fetch ratings' });
+    }
+}
+
+

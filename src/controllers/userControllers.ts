@@ -68,7 +68,7 @@ export async function logIn(req: Request, res: Response): Promise<Response> {
     }
 }
 
-export async function reactGoogleLogin(req: Request, res: Response): Promise<Response> {
+export async function reactGoogleLoginLover(req: Request, res: Response): Promise<Response> {
     try {
         const { token } = req.body;
         const ticket = await client.verifyIdToken({
@@ -79,7 +79,27 @@ export async function reactGoogleLogin(req: Request, res: Response): Promise<Res
         if (!payload) {
             return res.status(400).json({ message: 'Invalid Google token' });
         }
-        const user = await userServices.getEntries.findOrCreateGoogleUser(payload);
+        const user = await userServices.getEntries.findOrCreateGoogleUserMaker(payload);
+        const jwtToken = jwt.sign({ _id: user._id, username: user.username, tipo: user.tipo }, process.env.SECRET || 'tokentest');
+        return res.json({ user, token: jwtToken });
+    } catch (e) {
+        console.error('Error during Google login:', e); // Add detailed error logging
+        return res.status(500).json({ e: 'Failed to login with Google' });
+    }
+}
+
+export async function reactGoogleLoginMaker(req: Request, res: Response): Promise<Response> {
+    try {
+        const { token } = req.body;
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+        const payload = ticket.getPayload();
+        if (!payload) {
+            return res.status(400).json({ message: 'Invalid Google token' });
+        }
+        const user = await userServices.getEntries.findOrCreateGoogleUserLover(payload);
         const jwtToken = jwt.sign({ _id: user._id, username: user.username, tipo: user.tipo }, process.env.SECRET || 'tokentest');
         return res.json({ user, token: jwtToken });
     } catch (e) {

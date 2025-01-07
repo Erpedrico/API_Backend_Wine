@@ -85,10 +85,10 @@ export const getEntries = {
     findUserExperiences: async (id: string) => {
         return await usersofDB.findById(id).populate('experiences').exec();
     },
-    addExperiencia: async(idExp:string,idPart:string)=>{
-            return await usersofDB.findByIdAndUpdate(idPart,{$addToSet:{experiences:idExp}});
+    addExperiencia: async (idExp: string, idPart: string) => {
+        return await usersofDB.findByIdAndUpdate(idPart, { $addToSet: { experiences: idExp } });
     },
-    findOrCreateGoogleUser: async (profile: any): Promise<usersInterface> => {
+    findOrCreateGoogleUserLover: async (profile: any): Promise<usersInterface> => {
         let user = await usersofDB.findOne({ googleId: profile.sub });
         if (!user) {
             user = await usersofDB.findOne({ mail: profile.email });

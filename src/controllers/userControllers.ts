@@ -83,6 +83,7 @@ export async function reactGoogleLogin(req: Request, res: Response): Promise<Res
         const jwtToken = jwt.sign({ _id: user._id, username: user.username, tipo: user.tipo }, process.env.SECRET || 'tokentest');
         return res.json({ user, token: jwtToken });
     } catch (e) {
+        console.error('Error during Google login:', e); // Add detailed error logging
         return res.status(500).json({ e: 'Failed to login with Google' });
     }
 }

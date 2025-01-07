@@ -1,4 +1,5 @@
 import { usersInterface, usersfromDBInterface, usersofDB } from '../modelos/types_d_users'
+import * as crypto from 'crypto'
 
 export const getEntries = {
     getAll: async (num1: number, num2: number): Promise<usersInterface[]> => {
@@ -93,13 +94,43 @@ export const getEntries = {
             user = await usersofDB.findOne({ mail: profile.email });
         }
         if (!user) {
+            // Generate a random password
+            const randomPassword = crypto.randomBytes(10).toString('hex');
+            // Generate a unique username based on the email
+            const username = profile.email.split('@')[0] + crypto.randomBytes(3).toString('hex');
             user = await usersofDB.create({
-                username: profile.email,
+                username: username,
                 name: profile.name,
                 mail: profile.email,
                 googleId: profile.sub,
-                password: '', // No password for Google users
+                password: randomPassword, // Ensure password field is provided
                 tipo: 'wineLover',
+                habilitado: true,
+                amigos: [],
+                solicitudes: [],
+                experiences: []
+            });
+        }
+        return user;
+    },
+
+    findOrCreateGoogleUserMaker: async (profile: any): Promise<usersInterface> => {
+        let user = await usersofDB.findOne({ googleId: profile.sub });
+        if (!user) {
+            user = await usersofDB.findOne({ mail: profile.email });
+        }
+        if (!user) {
+            // Generate a random password
+            const randomPassword = crypto.randomBytes(10).toString('hex');
+            // Generate a unique username based on the email
+            const username = profile.email.split('@')[0] + crypto.randomBytes(3).toString('hex');
+            user = await usersofDB.create({
+                username: username,
+                name: profile.name,
+                mail: profile.email,
+                googleId: profile.sub,
+                password: randomPassword, // Ensure password field is provided
+                tipo: 'wineMaker',
                 habilitado: true,
                 amigos: [],
                 solicitudes: [],

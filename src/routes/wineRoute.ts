@@ -10,7 +10,7 @@ const router = express.Router()
 
 router.route('/')
     .get(TokenValidation, AdminValidation,findAllWine)
-    .post(TokenValidation, AdminValidation,createWine)
+    .post(TokenValidation,createWine)
 
 router.route('/:id')
     .get(TokenValidation, AdminValidation,findWine)

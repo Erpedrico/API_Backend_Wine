@@ -3,8 +3,9 @@ import cors from 'cors'
 import userRouter from './routes/userRoute'
 import experienciasRouter from './routes/experienciasRoute'
 import wineRouter from './routes/wineRoute'
+import chatRouter from './routes/chatRoute'
 import { run } from './database/mongo_conn'
-import initializeSocket from './routes/chatRoute'
+import initializeSocket from './utils/initializeSocket'
 
 const app = express()
 app.use(express.json())
@@ -30,7 +31,7 @@ app.get('/ping', (_req, res) => {
 app.use('/api/user', userRouter)
 app.use('/api/experiencias', experienciasRouter)
 app.use('/api/wine', wineRouter)
-
+app.use('/api/chat', chatRouter)
 
 
 const server = app.listen(PORT, () => {

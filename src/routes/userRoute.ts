@@ -50,9 +50,9 @@ router.route('/addExpToPart/:idExp/:idPart')
     .post(addExperienciaToParticipant)
 
 router.route('/reactGoogleLoginMaker')
-    .post(reactGoogleLoginLover);
+    .post(reactGoogleLoginMaker);
 
 router.route('/reactGoogleLoginLover')
-    .post(reactGoogleLoginMaker);
+    .post(reactGoogleLoginLover);
 
 export default router

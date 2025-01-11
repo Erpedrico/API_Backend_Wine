@@ -79,7 +79,7 @@ export async function reactGoogleLoginLover(req: Request, res: Response): Promis
         if (!payload) {
             return res.status(400).json({ message: 'Invalid Google token' });
         }
-        const user = await userServices.getEntries.findOrCreateGoogleUserMaker(payload);
+        const user = await userServices.getEntries.findOrCreateGoogleUserLover(payload);
         const jwtToken = jwt.sign({ _id: user._id, username: user.username, tipo: user.tipo }, process.env.SECRET || 'tokentest');
         return res.json({ user, token: jwtToken });
     } catch (e) {
@@ -99,7 +99,7 @@ export async function reactGoogleLoginMaker(req: Request, res: Response): Promis
         if (!payload) {
             return res.status(400).json({ message: 'Invalid Google token' });
         }
-        const user = await userServices.getEntries.findOrCreateGoogleUserLover(payload);
+        const user = await userServices.getEntries.findOrCreateGoogleUserMaker(payload);
         const jwtToken = jwt.sign({ _id: user._id, username: user.username, tipo: user.tipo }, process.env.SECRET || 'tokentest');
         return res.json({ user, token: jwtToken });
     } catch (e) {

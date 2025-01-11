@@ -1,5 +1,6 @@
 import { usersInterface, usersfromDBInterface, usersofDB } from '../modelos/types_d_users'
 import * as crypto from 'crypto'
+import { experienciasInterface } from '../modelos/types_d_experiencias'
 
 export const getEntries = {
     getAll: async (num1: number, num2: number): Promise<usersInterface[]> => {
@@ -138,5 +139,24 @@ export const getEntries = {
             });
         }
         return user;
-    }
+    },
+
+    findUserExperiencesByUsername: async (username: string) => {
+        // Buscar al usuario y rellenar sus experiencias con el campo 'title'
+        const user = await usersofDB
+            .findOne({ username: username })
+            .populate<{ experiences: Pick<experienciasInterface, 'title'>[] }>({
+                path: 'experiences',
+                select: 'title',
+            })
+            .exec();
+
+        if (user && user.experiences) {
+            // Mapear los títulos de las experiencias
+            return user.experiences.map((exp) => exp.title);
+        }
+
+        return []; // Devolver un array vacío si no hay experiencias
+    },
+
 }

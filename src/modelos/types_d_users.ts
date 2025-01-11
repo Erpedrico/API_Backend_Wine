@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 export interface usersInterface {
     _id?: string,
@@ -11,7 +11,7 @@ export interface usersInterface {
     habilitado: boolean,
     amigos: string[],
     solicitudes: string[],
-    experiences: string[],
+    experiences: Types.ObjectId[],
     googleId?: string; // Add this line
 }
 export type UsersInterfacePublicInfo = Pick<usersInterface, 'name' | 'comment'>

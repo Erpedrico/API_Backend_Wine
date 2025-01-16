@@ -280,3 +280,23 @@ export async function addExperienciaToParticipant(req: Request, res: Response): 
     }
 }
 
+export async function getUserProfileByUsername(req: Request, res: Response): Promise<Response> {
+    try {
+        const { username } = req.params; // Obtener el nombre de usuario de los parámetros
+
+        // Buscar al usuario por nombre de usuario
+        const user = await userServices.getEntries.findByUsername(username);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Devolver los datos del usuario
+        return res.status(200).json(user);
+    } catch (e) {
+        console.error('Failed to fetch user profile:', e);
+        return res.status(500).json({ message: 'Failed to fetch user profile' });
+    }
+}
+
+

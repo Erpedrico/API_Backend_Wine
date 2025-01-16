@@ -57,7 +57,8 @@ export async function logIn(req: Request, res: Response): Promise<Response> {
             console.log("Generated token:", token); // Muestra el token generado
 
             // Responde con el usuario y el token
-            return res.json({ user, token }); // Enviar tanto el usuario como el token
+            // return res.json({ user, token }); // Enviar tanto el usuario como el token
+            return res.header('auth-token', token).json({ user, token }); // Enviar tanto el usuario como el token
         } else {
             // Si el usuario no se encuentra, responde con un error
             return res.status(400).json({ message: 'User or password incorrect' });

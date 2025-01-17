@@ -13,13 +13,13 @@ export const findRatingByUser = async (experienceId: string, userId: string) => 
 };
 
 export const getEntries = {
-    getAll: async()=>{
-    return await experienciasofDB.find();
+    getAll: async () => {
+        return await experienciasofDB.find();
     },
-    findById: async(id:string)=>{
+    findById: async (id: string) => {
         return await experienciasofDB.findById(id);
     },
-    findUserById: async(id:string)=>{
+    findUserById: async (id: string) => {
         return await experienciasofDB.findById(id);
     },
     addParticipant: async (idExp: string, idPart: string) => {
@@ -30,16 +30,16 @@ export const getEntries = {
                 { $addToSet: { participants: idPart } },
                 { new: true } // Devuelve el documento actualizado
             );
-    
+
             return updatedExperience;
         } catch (error) {
             console.error('Error in addParticipant service:', error); // Log para depuración
             throw error;
         }
     },
-    
-    delParticipant: async(idExp:string,idPart:string)=>{
-        return await experienciasofDB.findByIdAndUpdate(idExp,{$pull:{participants:idPart}});
+
+    delParticipant: async (idExp: string, idPart: string) => {
+        return await experienciasofDB.findByIdAndUpdate(idExp, { $pull: { participants: idPart } });
     },
     create: async (entry: object) => {
         try {
@@ -51,19 +51,19 @@ export const getEntries = {
             throw new Error('Error al crear la experiencia');  // Lanza un error para manejarlo en el controlador
         }
     },
-    
-    update: async(id:string,body:object)=>{
+
+    update: async (id: string, body: object) => {
         console.log(body);
-        return await experienciasofDB.findByIdAndUpdate(id,body,{$new:true});
+        return await experienciasofDB.findByIdAndUpdate(id, body, { $new: true });
     },
-    findByOwnerandUpdate: async(id:string,body:object): Promise<experienciasInterface | null>=>{
-        return await experienciasofDB.findOneAndUpdate({owner:id},body).exec();
+    findByOwnerandUpdate: async (id: string, body: object): Promise<experienciasInterface | null> => {
+        return await experienciasofDB.findOneAndUpdate({ owner: id }, body).exec();
     },
-    delete: async(id:string)=>{
+    delete: async (id: string) => {
         return await experienciasofDB.findByIdAndDelete(id);
     },
-    findByOwnerandDelete: async(id:string): Promise<experienciasInterface | null>=>{
-        return await experienciasofDB.findOneAndDelete({owner:id}).exec();
+    findByOwnerandDelete: async (id: string): Promise<experienciasInterface | null> => {
+        return await experienciasofDB.findOneAndDelete({ owner: id }).exec();
     },
     addRating: async (experienceId: string, user: any, ratingValue: number, comment: string): Promise<experienciasInterface | null> => {
         try {
@@ -72,48 +72,53 @@ export const getEntries = {
             if (existingRating) {
                 return null;
             }
-    
+
             // Buscar la experiencia
             const experience = await experienciasofDB.findById(experienceId);
             if (!experience) {
                 return null;
             }
-    
+
             // Añadir la nueva valoración
             experience.ratings.push({ user: user._id, value: ratingValue, comment });
-    
+
             // Recalcular el promedio
             const totalRatings = experience.ratings.length;
             const sumRatings = experience.ratings.reduce((acc, rating) => acc + rating.value, 0);
             const averageRating = sumRatings / totalRatings;
             experience.averageRating = averageRating;
-    
+
             // Guardar la experiencia actualizada
             await experience.save();
-    
+
             return experience;
         } catch (error) {
             console.error("Error adding rating in service:", error);
             throw new Error("Failed to add rating");
         }
     },
-        
+
     // Función para obtener las valoraciones (ratings) de una experiencia
     getRatingsByExperience: async (experienceId: string) => {
-    try {
-        console.log(experienceId)
-        // Buscar la experiencia por ID
-        const experience = await experienciasofDB.findById(experienceId);
-        console.log(experience)
-        if (!experience) {
-            return null; // Si no se encuentra la experiencia, retornamos null
+        try {
+            console.log(experienceId)
+            // Buscar la experiencia por ID
+            const experience = await experienciasofDB.findById(experienceId);
+            console.log(experience)
+            if (!experience) {
+                return null; // Si no se encuentra la experiencia, retornamos null
+            }
+            // Retornar las valoraciones asociadas a la experiencia
+            console.log(experience.ratings)
+            return experience.ratings;
+        } catch (error) {
+            console.error("Error fetching ratings:", error);
+            throw new Error("Error fetching ratings");
         }
-        // Retornar las valoraciones asociadas a la experiencia
-        console.log(experience.ratings)
-        return experience.ratings;
-    } catch (error) {
-        console.error("Error fetching ratings:", error);
-        throw new Error("Error fetching ratings");
-    }
-    }
+    },
+
+    findByOwner: async (ownerId: string) => {
+        return await experienciasofDB.find({ owner: ownerId });
+    },
+
 }

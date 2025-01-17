@@ -4,6 +4,7 @@ import userRouter from './routes/userRoute'
 import experienciasRouter from './routes/experienciasRoute'
 import wineRouter from './routes/wineRoute'
 import chatRouter from './routes/chatRoute'
+import grapeTypeRoute from './routes/grapeTypeRoute'
 import { run } from './database/mongo_conn'
 import initializeSocket from './utils/initializeSocket'
 
@@ -32,7 +33,7 @@ app.use('/api/user', userRouter)
 app.use('/api/experiencias', experienciasRouter)
 app.use('/api/wine', wineRouter)
 app.use('/api/chat', chatRouter)
-
+app.use('/api/grapetypes', grapeTypeRoute);
 
 const server = app.listen(PORT, () => {
     console.log('el servidor esta escuchando en el puerto ' + PORT)

@@ -3,39 +3,39 @@ import * as experienciasServices from '../services/experienciasServices'
 import { Request, Response } from 'express'
 import * as userServices from '../services/userServices'
 
-export async function findAllExperiencias(_req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencias:experienciasInterface[]|null = await experienciasServices.getEntries.getAll()
+export async function findAllExperiencias(_req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencias: experienciasInterface[] | null = await experienciasServices.getEntries.getAll()
         return res.json(experiencias);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to find all experiencies' });
     }
 }
 
-export async function findExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencies:experienciasInterface|null = await experienciasServices.getEntries.findById(req.params.id)
+export async function findExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencies: experienciasInterface | null = await experienciasServices.getEntries.findById(req.params.id)
         return res.json(experiencies);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to find experiencies' });
     }
 }
 
-export async function findUsersFromExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencies:experienciasInterface|null = await experienciasServices.getEntries.findUserById(req.params.id)
-    return res.json(experiencies);
-    } catch(e){
+export async function findUsersFromExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencies: experienciasInterface | null = await experienciasServices.getEntries.findUserById(req.params.id)
+        return res.json(experiencies);
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to find experiencies' });
     }
 }
 
-export async function createExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
+export async function createExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
         console.log(req.body)
-        const experiencias:experienciasInterface|null = await experienciasServices.getEntries.create(req.body as object)
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.create(req.body as object)
         return res.status(200).json(experiencias)
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to create experiencies' });
     }
 }
@@ -60,29 +60,29 @@ export async function addParticipantToExperiencias(req: Request, res: Response):
 }
 
 
-export async function updateExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencias:experienciasInterface|null = await experienciasServices.getEntries.update(req.params.id,req.body as object)
+export async function updateExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.update(req.params.id, req.body as object)
         return res.status(200).json(experiencias);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to update experiencies' });
     }
 }
 
-export async function deleteExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencias:experienciasInterface|null = await experienciasServices.getEntries.delete(req.params.id)
+export async function deleteExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.delete(req.params.id)
         return res.json(experiencias);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to delete experiencies' });
     }
 }
 
-export async function delParticipantToExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencias:experienciasInterface|null = await experienciasServices.getEntries.delParticipant(req.params.idExp,req.params.idPart)
+export async function delParticipantToExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.delParticipant(req.params.idExp, req.params.idPart)
         return res.json(experiencias);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to del participant' });
     }
 }
@@ -90,7 +90,7 @@ export async function delParticipantToExperiencias(req:Request,res:Response):Pro
 export async function toggleHabilitacionExperiencias(req: Request, res: Response): Promise<Response> {
     try {
         const { habilitado } = req.body;  // Obtener el nuevo estado de habilitación del cuerpo de la petición
-        
+
         if (typeof habilitado !== 'boolean') {
             return res.status(400).json({ message: 'El campo habilitado debe ser un valor booleano' });
         }
@@ -170,6 +170,20 @@ export async function getRatingsForExperience(req: Request, res: Response): Prom
     } catch (error) {
         console.error('Error fetching ratings:', error); // Agregar log para errores
         return res.status(500).json({ message: 'Failed to fetch ratings' });
+    }
+}
+
+export async function getExperiencesByOwner(req: Request, res: Response): Promise<Response> {
+    try {
+        const { id } = req.params;
+        const experiences = await experienciasServices.getEntries.findByOwner(id);
+        if (!experiences || experiences.length === 0) {
+            return res.status(404).json({ message: 'No experiences found for this user' });
+        }
+        return res.status(200).json(experiences);
+    } catch (e) {
+        console.error('Error fetching experiences by owner:', e);
+        return res.status(500).json({ e: 'Failed to fetch experiences' });
     }
 }
 

@@ -8,7 +8,9 @@ export interface wineInterface {
     brand: string,
     grapetype: string,
     habilitado: boolean,
-    experience: Types.ObjectId
+    notes: { icon: string; label: string }[],
+    experience: Types.ObjectId,
+    year: number,
 }
 
 export const wineSchema = new Schema<wineInterface>({
@@ -19,7 +21,14 @@ export const wineSchema = new Schema<wineInterface>({
     brand: { type: String, required: true },
     grapetype: { type: String, required: true },
     habilitado: { type: Boolean, required: true },
+    notes: [
+        {
+            icon: { type: String, required: true },
+            label: { type: String, required: true },
+        },
+    ],
     experience: { type: Schema.Types.ObjectId, ref: 'Experiencias', required: true },
+    year: { type: Number, required: true },
 })
 
 export const wineofDB = model<wineInterface>('wine', wineSchema)

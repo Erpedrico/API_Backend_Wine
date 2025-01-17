@@ -3,39 +3,39 @@ import * as experienciasServices from '../services/experienciasServices'
 import { Request, Response } from 'express'
 import * as userServices from '../services/userServices'
 
-export async function findAllExperiencias(_req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencias:experienciasInterface[]|null = await experienciasServices.getEntries.getAll()
+export async function findAllExperiencias(_req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencias: experienciasInterface[] | null = await experienciasServices.getEntries.getAll()
         return res.json(experiencias);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to find all experiencies' });
     }
 }
 
-export async function findExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencies:experienciasInterface|null = await experienciasServices.getEntries.findById(req.params.id)
+export async function findExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencies: experienciasInterface | null = await experienciasServices.getEntries.findById(req.params.id)
         return res.json(experiencies);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to find experiencies' });
     }
 }
 
-export async function findUsersFromExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencies:experienciasInterface|null = await experienciasServices.getEntries.findUserById(req.params.id)
-    return res.json(experiencies);
-    } catch(e){
+export async function findUsersFromExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencies: experienciasInterface | null = await experienciasServices.getEntries.findUserById(req.params.id)
+        return res.json(experiencies);
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to find experiencies' });
     }
 }
 
-export async function createExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
+export async function createExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
         console.log(req.body)
-        const experiencias:experienciasInterface|null = await experienciasServices.getEntries.create(req.body as object)
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.create(req.body as object)
         return res.status(200).json(experiencias)
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to create experiencies' });
     }
 }
@@ -60,29 +60,29 @@ export async function addParticipantToExperiencias(req: Request, res: Response):
 }
 
 
-export async function updateExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencias:experienciasInterface|null = await experienciasServices.getEntries.update(req.params.id,req.body as object)
+export async function updateExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.update(req.params.id, req.body as object)
         return res.status(200).json(experiencias);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to update experiencies' });
     }
 }
 
-export async function deleteExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencias:experienciasInterface|null = await experienciasServices.getEntries.delete(req.params.id)
+export async function deleteExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.delete(req.params.id)
         return res.json(experiencias);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to delete experiencies' });
     }
 }
 
-export async function delParticipantToExperiencias(req:Request,res:Response):Promise<Response> {
-    try{
-        const experiencias:experienciasInterface|null = await experienciasServices.getEntries.delParticipant(req.params.idExp,req.params.idPart)
+export async function delParticipantToExperiencias(req: Request, res: Response): Promise<Response> {
+    try {
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.delParticipant(req.params.idExp, req.params.idPart)
         return res.json(experiencias);
-    } catch(e){
+    } catch (e) {
         return res.status(500).json({ e: 'Failed to del participant' });
     }
 }
@@ -90,7 +90,7 @@ export async function delParticipantToExperiencias(req:Request,res:Response):Pro
 export async function toggleHabilitacionExperiencias(req: Request, res: Response): Promise<Response> {
     try {
         const { habilitado } = req.body;  // Obtener el nuevo estado de habilitación del cuerpo de la petición
-        
+
         if (typeof habilitado !== 'boolean') {
             return res.status(400).json({ message: 'El campo habilitado debe ser un valor booleano' });
         }
@@ -117,6 +117,7 @@ export async function addRatingToExperience(req: Request, res: Response): Promis
         if (ratingValue == null || ratingValue < 0 || ratingValue > 5) {
             return res.status(400).json({ message: "Rating value must be between 0 and 5" });
         }
+
         if (!comment || comment.trim() === "") {
             return res.status(400).json({ message: "Comment is required" });
         }
@@ -141,7 +142,12 @@ export async function addRatingToExperience(req: Request, res: Response): Promis
             comment // Pasa el comentario al servicio
         );
 
+        if (!experience) {
+            // En caso de que el usuario ya haya valorado la experiencia, devolver un error
+            return res.status(400).json({ message: "User has already rated this experience" });
+        }
         return res.status(200).json({ message: "Rating and comment added successfully", experience });
+
     } catch (error) {
         console.error("Error adding rating:", error);
         const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
@@ -151,11 +157,11 @@ export async function addRatingToExperience(req: Request, res: Response): Promis
 
 // Función para obtener las valoraciones de una experiencia
 export async function getRatingsForExperience(req: Request, res: Response): Promise<Response> {
-    const { id } = req.params; // Obtener el id de la experiencia desde los parámetros
+    const { experienceId } = req.params; // Obtener el id de la experiencia desde los parámetros
 
     try {
         // Llamamos a la función que obtiene las valoraciones
-        const ratings = await experienciasServices.getEntries.getRatingsByExperience(id);
+        const ratings = await experienciasServices.getEntries.getRatingsByExperience(experienceId);
 
         if (!ratings) {
             return res.status(404).json({ message: 'No ratings found for this experience' });

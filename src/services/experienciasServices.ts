@@ -65,7 +65,9 @@ export const getEntries = {
     findByOwnerandDelete: async(id:string): Promise<experienciasInterface | null>=>{
         return await experienciasofDB.findOneAndDelete({owner:id}).exec();
     },
+    
     addRating: async (experienceId: string, user: any, ratingValue: number, comment: string): Promise<experienciasInterface | null> => {
+    //addRating: async (experienceId: string, user: any, ratingValue: number): Promise<experienciasInterface | null> => {
         try {
             // Verificar si el usuario ya ha valorado la experiencia
             const existingRating = await findRatingByUser(experienceId, user._id);

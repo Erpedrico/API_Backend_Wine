@@ -4,7 +4,6 @@ import * as userServices from '../services/userServices'
 import * as experienciasServices from '../services/experienciasServices'
 import * as wineServices from '../services/wineServices'
 import { Request, Response } from 'express'
-
 import jwt from 'jsonwebtoken'
 import { OAuth2Client } from 'google-auth-library';
 
@@ -17,6 +16,19 @@ export async function findAllUsers(req: Request, res: Response): Promise<Respons
         return res.json(user);
     } catch (e) {
         return res.status(500).json({ e: 'Failed to find all user' });
+    }
+}
+
+export async function findNameById(req: Request, res: Response): Promise<Response> {
+    try {
+        const user = await userServices.getEntries.findNameById(req.params.id);
+        if (user) {
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).json({ message: 'User not found' });
+        }
+    } catch (error) {
+        return res.status(500).json({ message: 'Internal server error' });
     }
 }
 

@@ -13,6 +13,20 @@ export const getEntries = {
     findById: async (id: string): Promise<usersInterface | null> => {
         return await usersofDB.findById(id);
     },
+    findNameById: async (id: string): Promise<string | null> => {
+        return await usersofDB.findOne({ _id: id }).exec()
+            .then(userResponse => {
+                if (userResponse == null) {
+                    return null;
+                } else {
+                    return userResponse.name.toString();
+                }
+            })
+            .catch(error => {
+                console.error('Error al buscar el usuario por nombre:', error);
+                return null;
+            });
+    },
     findIdAndPassword: async (username: string, password: string): Promise<usersInterface | null> => {
         // Si falla quitar el name:name por name, pero no deberia.
         return await usersofDB.findOne({ username: username }).exec()

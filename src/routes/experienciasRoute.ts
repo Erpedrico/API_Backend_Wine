@@ -29,7 +29,7 @@ router.route('/Participant/:idExp/:idPart')
 router.route('/rate/:experienceId/:userId')
   .post(addRatingToExperience);
 
-router.route('/ratings/:idRating')
+router.route('/ratings/:id')
   .get(getRatingsForExperience) 
 
 export default router

@@ -153,18 +153,22 @@ export async function addRatingToExperience(req: Request, res: Response): Promis
 export async function getRatingsForExperience(req: Request, res: Response): Promise<Response> {
     const { id } = req.params; // Obtener el id de la experiencia desde los parámetros
 
+    console.log("ID recibido desde los parámetros:", id); // Agregar un console log para verificar el ID
+
     try {
         // Llamamos a la función que obtiene las valoraciones
         const ratings = await experienciasServices.getEntries.getRatingsByExperience(id);
 
         if (!ratings) {
+            console.log("No ratings found for this experience"); // Agregar log en caso de que no haya valoraciones
             return res.status(404).json({ message: 'No ratings found for this experience' });
         }
 
         // Si las valoraciones existen, las devolvemos
+        console.log("Ratings encontrados:", ratings); // Agregar log para ver las valoraciones
         return res.status(200).json(ratings);
     } catch (error) {
-        console.error('Error fetching ratings:', error);
+        console.error('Error fetching ratings:', error); // Agregar log para errores
         return res.status(500).json({ message: 'Failed to fetch ratings' });
     }
 }

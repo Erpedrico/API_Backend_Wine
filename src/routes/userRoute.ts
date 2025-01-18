@@ -1,7 +1,6 @@
 import express from 'express'
 import { addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findUser, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByName, findUserByUserName, addExperienciaToParticipant, reactGoogleLoginLover, reactGoogleLoginMaker, getUserProfileByUsername } from '../controllers/userControllers'
 import { TokenValidation } from '../middleware/verifyJWT'
-import { verifyOwnership } from '../middleware/verifyOwner'
 import { AdminValidation } from '../middleware/verifyAdmin'
 
 //import toNewUser from '../extras/utils'
@@ -14,7 +13,7 @@ router.route('/')
 
 router.route('/:id')
     .get(TokenValidation, findUser)
-    .put(TokenValidation, verifyOwnership, updateUser)
+    .put(TokenValidation, updateUser)
     .delete(TokenValidation, AdminValidation, deleteUser)
 
 router.route('/all')
@@ -57,6 +56,10 @@ router.route('/reactGoogleLoginLover')
 
 router.route('/profile/username/:username')
     .get(TokenValidation, getUserProfileByUsername);
+
+router.route('/updateUser/:userId')
+    .put(TokenValidation, updateUser);
+
 
 
 export default router

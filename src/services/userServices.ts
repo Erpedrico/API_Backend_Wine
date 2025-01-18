@@ -46,7 +46,7 @@ export const getEntries = {
         return await usersofDB.create(entry);
     },
     update: async (id: string, body: object): Promise<usersInterface | null> => {
-        console.log(body);
+        console.log("Este es el cuerpo que me llega:", body);
         return await usersofDB.findByIdAndUpdate(id, body, { $new: true });
     },
     delete: async (id: string): Promise<usersInterface | null> => {

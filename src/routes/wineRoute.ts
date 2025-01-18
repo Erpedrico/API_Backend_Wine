@@ -1,16 +1,17 @@
 import express from 'express'
-import { createWine, deleteWine, findAllWine, findWine, toggleHabilitacionWine, updateWine } from '../controllers/wineControllers'
+import { createWine, deleteWine, findAllWine, findWine, toggleHabilitacionWine, updateWine, getWinesByOwner } from '../controllers/wineControllers'
 import { TokenValidation } from '../middleware/verifyJWT'
 import { verifyOwnership } from '../middleware/verifyOwner'
 import { AdminValidation } from '../middleware/verifyAdmin'
-
-//import toNewUser from '../extras/utils'
 
 const router = express.Router()
 
 router.route('/')
     .get(TokenValidation, findAllWine)
     .post(TokenValidation, createWine)
+
+router.route('/owner/:id')
+    .get(TokenValidation, getWinesByOwner);
 
 router.route('/:id')
     .get(TokenValidation, AdminValidation, findWine)

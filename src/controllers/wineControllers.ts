@@ -1,4 +1,5 @@
 import { wineInterface } from '../modelos/types_d_wine'
+import '../modelos/types_d_experiencias';
 import * as wineServices from '../services/wineServices'
 import { Request, Response } from 'express'
 
@@ -87,3 +88,22 @@ export async function toggleHabilitacionWine(req: Request, res: Response): Promi
         return res.status(500).json({ e: 'Failed to update wine habilitation' });
     }
 }
+
+// wineControllers.ts
+
+export async function getWinesByOwner(req: Request, res: Response): Promise<Response> {
+    try {
+        const { id: ownerId } = req.params; // Obtiene el ID del propietario desde los parámetros
+        const wines = await wineServices.getEntries.getByOwner(ownerId); // Llama al servicio para obtener los vinos
+
+        if (!wines || wines.length === 0) {
+            return res.status(404).json({ message: 'No wines found for the current owner' });
+        }
+
+        return res.status(200).json(wines); // Responde con los vinos encontrados
+    } catch (error) {
+        console.error('Error fetching wines by owner:', error);
+        return res.status(500).json({ error: 'Failed to fetch wines by owner' });
+    }
+}
+

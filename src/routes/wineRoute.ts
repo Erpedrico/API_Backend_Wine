@@ -9,7 +9,7 @@ import { AdminValidation } from '../middleware/verifyAdmin'
 const router = express.Router()
 
 router.route('/')
-    .get(TokenValidation, AdminValidation, findAllWine)
+    .get(TokenValidation, findAllWine)
     .post(TokenValidation, createWine)
 
 router.route('/:id')

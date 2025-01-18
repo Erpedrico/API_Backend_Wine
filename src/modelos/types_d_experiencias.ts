@@ -14,11 +14,12 @@ export interface experienciasInterface {
         user: Types.ObjectId;  // ID of the user who rated
         value: number;          // Rating value (0-5)
         comment: string; // Incluye el comentario
-    }[]; 
+    }[];
     reviews: Types.ObjectId[]; // Array of review references
     date: string;
     services: Service[]; // Array of services
     averageRating: number;  // Average rating (optional)
+    wines: Types.ObjectId[]; // Array of wine references
 }
 // const generateRandomRating = () => { return Math.round((Math.random() * 5) * 10) / 10; };
 
@@ -48,6 +49,7 @@ export const experienciasSchema = new Schema<experienciasInterface>({
         },
     ],
     averageRating: { type: Number, default: 0, required: true }, // Optional: Field for average rating
+    wines: [{ type: Schema.Types.ObjectId, ref: "wine" }],
 });
 
 export const experienciasofDB = model<experienciasInterface>('experiencias', experienciasSchema);

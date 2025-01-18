@@ -69,7 +69,11 @@ export async function logIn(req: Request, res: Response): Promise<Response> {
             console.log("Generated token:", token); // Muestra el token generado
 
             // Responde con el usuario y el token
+<<<<<<< HEAD
             //return res.json({ user, token }); // Enviar tanto el usuario como el token
+=======
+            // return res.json({ user, token }); // Enviar tanto el usuario como el token
+>>>>>>> 7a7b399fb32170c37f7fddac51c97c812f600138
             return res.header('auth-token', token).json({ user, token }); // Enviar tanto el usuario como el token
         } else {
             // Si el usuario no se encuentra, responde con un error
@@ -291,4 +295,24 @@ export async function addExperienciaToParticipant(req: Request, res: Response): 
         return res.status(500).json({ message: 'Failed to add experience to participant' });
     }
 }
+
+export async function getUserProfileByUsername(req: Request, res: Response): Promise<Response> {
+    try {
+        const { username } = req.params; // Obtener el nombre de usuario de los parámetros
+
+        // Buscar al usuario por nombre de usuario
+        const user = await userServices.getEntries.findByUsername(username);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Devolver los datos del usuario
+        return res.status(200).json(user);
+    } catch (e) {
+        console.error('Failed to fetch user profile:', e);
+        return res.status(500).json({ message: 'Failed to fetch user profile' });
+    }
+}
+
 

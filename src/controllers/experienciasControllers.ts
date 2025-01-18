@@ -30,6 +30,7 @@ export async function findUsersFromExperiencias(req: Request, res: Response): Pr
     }
 }
 
+<<<<<<< HEAD
 export async function createExperiencias(req: Request, res: Response): Promise<Response> {
     try {
         console.log(req.body)
@@ -37,8 +38,20 @@ export async function createExperiencias(req: Request, res: Response): Promise<R
         return res.status(200).json(experiencias)
     } catch (e) {
         return res.status(500).json({ e: 'Failed to create experiencies' });
+=======
+export const createExperiencia = async (req: Request, res: Response) => {
+    try {
+        const newExperience = await experienciasServices.getEntries.create(req.body);
+
+        await userServices.getEntries.addExperiencia(newExperience._id.toString(), req.body.owner);
+
+        res.status(201).json(newExperience);
+    } catch (error) {
+        console.error('Error creating experience:', error);
+        res.status(500).json({ error: 'Failed to create experience' });
+>>>>>>> 7a7b399fb32170c37f7fddac51c97c812f600138
     }
-}
+};
 
 export async function addParticipantToExperiencias(req: Request, res: Response): Promise<Response> {
     try {
@@ -159,19 +172,53 @@ export async function addRatingToExperience(req: Request, res: Response): Promis
 export async function getRatingsForExperience(req: Request, res: Response): Promise<Response> {
     const { experienceId } = req.params; // Obtener el id de la experiencia desde los parámetros
 
+    console.log("ID recibido desde los parámetros:", id); // Agregar un console log para verificar el ID
+
     try {
         // Llamamos a la función que obtiene las valoraciones
         const ratings = await experienciasServices.getEntries.getRatingsByExperience(experienceId);
 
         if (!ratings) {
+            console.log("No ratings found for this experience"); // Agregar log en caso de que no haya valoraciones
             return res.status(404).json({ message: 'No ratings found for this experience' });
         }
 
         // Si las valoraciones existen, las devolvemos
+        console.log("Ratings encontrados:", ratings); // Agregar log para ver las valoraciones
         return res.status(200).json(ratings);
     } catch (error) {
-        console.error('Error fetching ratings:', error);
+        console.error('Error fetching ratings:', error); // Agregar log para errores
         return res.status(500).json({ message: 'Failed to fetch ratings' });
+    }
+}
+
+export async function getExperiencesByOwner(req: Request, res: Response): Promise<Response> {
+    try {
+        const { id } = req.params;
+        const experiences = await experienciasServices.getEntries.findByOwner(id);
+        if (!experiences || experiences.length === 0) {
+            return res.status(404).json({ message: 'No experiences found for this user' });
+        }
+        return res.status(200).json(experiences);
+    } catch (e) {
+        console.error('Error fetching experiences by owner:', e);
+        return res.status(500).json({ e: 'Failed to fetch experiences' });
+    }
+}
+
+export async function addWineToExperience(req: Request, res: Response): Promise<Response> {
+    try {
+        const { experienceId, wineId } = req.params;
+        const updatedExperience = await experienciasServices.getEntries.addWine(experienceId, wineId);
+
+        if (!updatedExperience) {
+            return res.status(404).json({ message: 'Experience not found' });
+        }
+
+        return res.status(200).json(updatedExperience);
+    } catch (e) {
+        console.error('Error adding wine to experience:', e);
+        return res.status(500).json({ message: 'Failed to add wine to experience' });
     }
 }
 

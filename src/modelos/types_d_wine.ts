@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 export interface wineInterface {
     owner: string,
@@ -7,17 +7,28 @@ export interface wineInterface {
     color: string,
     brand: string,
     grapetype: string,
-    habilitado: boolean
+    habilitado: boolean,
+    notes: { icon: string; label: string }[],
+    experience: Types.ObjectId,
+    year: number,
 }
 
 export const wineSchema = new Schema<wineInterface>({
-    owner: String,
-    name: String,
-    price: Number,
-    color: String,
-    brand: String,
-    grapetype: String,
-    habilitado: Boolean
+    owner: { type: String, required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+    color: { type: String, required: true },
+    brand: { type: String, required: true },
+    grapetype: { type: String, required: true },
+    habilitado: { type: Boolean, required: true },
+    notes: [
+        {
+            icon: { type: String, required: true },
+            label: { type: String, required: true },
+        },
+    ],
+    experience: { type: Schema.Types.ObjectId, ref: 'Experiencias', required: true },
+    year: { type: Number, required: true },
 })
 
 export const wineofDB = model<wineInterface>('wine', wineSchema)

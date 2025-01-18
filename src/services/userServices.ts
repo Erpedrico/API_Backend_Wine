@@ -86,8 +86,17 @@ export const getEntries = {
     findUserExperiences: async (id: string) => {
         return await usersofDB.findById(id).populate('experiences').exec();
     },
-    addExperiencia: async (idExp: string, idPart: string) => {
-        return await usersofDB.findByIdAndUpdate(idPart, { $addToSet: { experiences: idExp } });
+    addExperiencia: async (idExp: string, idUser: string) => {
+        try {
+            return await usersofDB.findByIdAndUpdate(
+                idUser,
+                { $addToSet: { experiences: idExp } },
+                { new: true }
+            );
+        } catch (error) {
+            console.error('Error adding experience to user:', error);
+            throw error;
+        }
     },
     findOrCreateGoogleUserLover: async (profile: any): Promise<usersInterface> => {
         let user = await usersofDB.findOne({ googleId: profile.sub });

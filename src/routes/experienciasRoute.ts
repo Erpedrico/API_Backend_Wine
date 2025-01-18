@@ -1,5 +1,5 @@
 import express from 'express'
-import { getRatingsForExperience, addParticipantToExperiencias, addRatingToExperience, createExperiencias, deleteExperiencias, delParticipantToExperiencias, findAllExperiencias, findExperiencias, findUsersFromExperiencias, updateExperiencias, getExperiencesByOwner, addWineToExperience } from '../controllers/experienciasControllers'
+import { getRatingsForExperience, addParticipantToExperiencias, addRatingToExperience, createExperiencia, deleteExperiencias, delParticipantToExperiencias, findAllExperiencias, findExperiencias, findUsersFromExperiencias, updateExperiencias, getExperiencesByOwner, addWineToExperience } from '../controllers/experienciasControllers'
 
 //import toNewUser from '../extras/utils'
 
@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.route('/')
     .get(findAllExperiencias)
-    .post(createExperiencias)
+    .post(createExperiencia)
 
 router.route('/:id')
     .get(findExperiencias)

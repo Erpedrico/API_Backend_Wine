@@ -30,15 +30,18 @@ export async function findUsersFromExperiencias(req: Request, res: Response): Pr
     }
 }
 
-export async function createExperiencias(req: Request, res: Response): Promise<Response> {
+export const createExperiencia = async (req: Request, res: Response) => {
     try {
-        console.log(req.body)
-        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.create(req.body as object)
-        return res.status(200).json(experiencias)
-    } catch (e) {
-        return res.status(500).json({ e: 'Failed to create experiencies' });
+        const newExperience = await experienciasServices.getEntries.create(req.body);
+
+        await userServices.getEntries.addExperiencia(newExperience._id.toString(), req.body.owner);
+
+        res.status(201).json(newExperience);
+    } catch (error) {
+        console.error('Error creating experience:', error);
+        res.status(500).json({ error: 'Failed to create experience' });
     }
-}
+};
 
 export async function addParticipantToExperiencias(req: Request, res: Response): Promise<Response> {
     try {

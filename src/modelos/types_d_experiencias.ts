@@ -49,7 +49,7 @@ export const experienciasSchema = new Schema<experienciasInterface>({
         },
     ],
     averageRating: { type: Number, default: 0, required: true }, // Optional: Field for average rating
-    wines: [{ type: Schema.Types.ObjectId, ref: "wine" }],
+    wines: [{ type: Schema.Types.ObjectId, ref: "wine", default: [] }],
 });
 
 export const experienciasofDB = model<experienciasInterface>('experiencias', experienciasSchema);

@@ -9,6 +9,7 @@ export interface usersInterface {
     comment: string,
     tipo: 'admin' | 'wineLover' | 'wineMaker',
     habilitado: boolean,
+    image: string,
     amigos: string[],
     solicitudes: string[],
     experiences: Types.ObjectId[],
@@ -32,6 +33,7 @@ export const usersSchema = new Schema<usersInterface>({
     solicitudes: [{ type: String, required: true, default: [] }],
     experiences: [{ type: Schema.Types.ObjectId, ref: 'experiencias', default: [] }], // Relación con experiencias
     googleId: { type: String, unique: true, sparse: true }, // Add this line
+    image: { type: String, required: false }, // URL de la imagen de perfil
 })
 
 export const usersofDB = model<usersInterface>('user', usersSchema)

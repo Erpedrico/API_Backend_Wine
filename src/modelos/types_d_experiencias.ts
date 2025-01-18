@@ -20,6 +20,7 @@ export interface experienciasInterface {
     services: Service[]; // Array of services
     averageRating: number;  // Average rating (optional)
     wines: Types.ObjectId[]; // Array of wine references
+    images: string[]; // Array of image URLs
 }
 // const generateRandomRating = () => { return Math.round((Math.random() * 5) * 10) / 10; };
 
@@ -50,6 +51,7 @@ export const experienciasSchema = new Schema<experienciasInterface>({
     ],
     averageRating: { type: Number, default: 0, required: true }, // Optional: Field for average rating
     wines: [{ type: Schema.Types.ObjectId, ref: "wine", default: [] }],
+    images: [{ type: String, required: false, default: [] }], // Vector de URLs de imágenes
 });
 
 export const experienciasofDB = model<experienciasInterface>('experiencias', experienciasSchema);

@@ -69,11 +69,7 @@ export async function logIn(req: Request, res: Response): Promise<Response> {
             console.log("Generated token:", token); // Muestra el token generado
 
             // Responde con el usuario y el token
-<<<<<<< HEAD
-            //return res.json({ user, token }); // Enviar tanto el usuario como el token
-=======
-            // return res.json({ user, token }); // Enviar tanto el usuario como el token
->>>>>>> 7a7b399fb32170c37f7fddac51c97c812f600138
+
             return res.header('auth-token', token).json({ user, token }); // Enviar tanto el usuario como el token
         } else {
             // Si el usuario no se encuentra, responde con un error
@@ -141,8 +137,6 @@ export async function createUser(req: Request, res: Response): Promise<Response>
     }
 }
 
-
-
 export async function updateUser(req: Request, res: Response): Promise<Response> {
     try {
         const user: usersInterface | null = await userServices.getEntries.update(req.params.id, req.body as object)
@@ -198,8 +192,6 @@ export async function addSolicitud(req: Request, res: Response): Promise<Respons
         return res.status(500).json({ message: 'Failed to add friend request' });
     }
 }
-
-
 
 export async function delSolicitud(req: Request, res: Response): Promise<Response> {
     try {

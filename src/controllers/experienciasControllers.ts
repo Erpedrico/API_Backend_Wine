@@ -30,26 +30,24 @@ export async function findUsersFromExperiencias(req: Request, res: Response): Pr
     }
 }
 
-<<<<<<< HEAD
-export async function createExperiencias(req: Request, res: Response): Promise<Response> {
+export async function createExperienciasFlutter(req: Request, res: Response): Promise<Response> {
     try {
         console.log(req.body)
         const experiencias: experienciasInterface | null = await experienciasServices.getEntries.create(req.body as object)
         return res.status(200).json(experiencias)
     } catch (e) {
         return res.status(500).json({ e: 'Failed to create experiencies' });
-=======
+    }
+}
+
 export const createExperiencia = async (req: Request, res: Response) => {
     try {
         const newExperience = await experienciasServices.getEntries.create(req.body);
-
         await userServices.getEntries.addExperiencia(newExperience._id.toString(), req.body.owner);
-
         res.status(201).json(newExperience);
     } catch (error) {
         console.error('Error creating experience:', error);
         res.status(500).json({ error: 'Failed to create experience' });
->>>>>>> 7a7b399fb32170c37f7fddac51c97c812f600138
     }
 };
 
@@ -172,7 +170,7 @@ export async function addRatingToExperience(req: Request, res: Response): Promis
 export async function getRatingsForExperience(req: Request, res: Response): Promise<Response> {
     const { experienceId } = req.params; // Obtener el id de la experiencia desde los parámetros
 
-    console.log("ID recibido desde los parámetros:", id); // Agregar un console log para verificar el ID
+    //console.log("ID recibido desde los parámetros:", id); // Agregar un console log para verificar el ID
 
     try {
         // Llamamos a la función que obtiene las valoraciones

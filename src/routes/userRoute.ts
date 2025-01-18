@@ -1,9 +1,5 @@
 import express from 'express'
-<<<<<<< HEAD
-import { addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findNameById, findUser, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByName, findUserByUserName, addExperienciaToParticipant, reactGoogleLoginLover, reactGoogleLoginMaker } from '../controllers/userControllers'
-=======
-import { addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findUser, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByName, findUserByUserName, addExperienciaToParticipant, reactGoogleLoginLover, reactGoogleLoginMaker, getUserProfileByUsername } from '../controllers/userControllers'
->>>>>>> 7a7b399fb32170c37f7fddac51c97c812f600138
+import { addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findNameById, findUser, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByName, findUserByUserName, addExperienciaToParticipant, reactGoogleLoginLover, reactGoogleLoginMaker, getUserProfileByUsername } from '../controllers/userControllers'
 import { TokenValidation } from '../middleware/verifyJWT'
 import { AdminValidation } from '../middleware/verifyAdmin'
 
@@ -58,18 +54,14 @@ router.route('/reactGoogleLoginMaker')
 router.route('/reactGoogleLoginLover')
     .post(reactGoogleLoginLover);
 
-<<<<<<< HEAD
 router.route('/usersId/:id')
      .get(findNameById);
     
-=======
 router.route('/profile/username/:username')
     .get(TokenValidation, getUserProfileByUsername);
 
 router.route('/updateUser/:userId')
     .put(TokenValidation, updateUser);
 
-
->>>>>>> 7a7b399fb32170c37f7fddac51c97c812f600138
 
 export default router

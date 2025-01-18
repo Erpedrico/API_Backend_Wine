@@ -66,7 +66,7 @@ router.route('/updateUser/:userId')
 router.route('/experiences/:id')
     .get(TokenValidation, getUserExperiences);
 
-router.route('/delExperienciaFromUser/:experienceId/:userId')
+router.route('/deleteExpFromUser/:experienceId/:userId')
   .delete(delExperienciaFromUser);
 
 export default router

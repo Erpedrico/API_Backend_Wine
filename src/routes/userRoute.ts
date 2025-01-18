@@ -1,5 +1,5 @@
 import express from 'express'
-import { addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findNameById, findUser, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByName, findUserByUserName, addExperienciaToParticipant, reactGoogleLoginLover, reactGoogleLoginMaker, getUserProfileByUsername } from '../controllers/userControllers'
+import { delExperienciaFromUser, addFriend, addSolicitud, createUser, deleteUser, delFriend, delSolicitud, findAllUsers, findNameById, findUser, logIn, toggleHabilitacion, updateUser, getUserExperiences, findUserByName, findUserByUserName, addExperienciaToParticipant, reactGoogleLoginLover, reactGoogleLoginMaker, getUserProfileByUsername } from '../controllers/userControllers'
 import { TokenValidation } from '../middleware/verifyJWT'
 import { AdminValidation } from '../middleware/verifyAdmin'
 
@@ -14,7 +14,7 @@ router.route('/')
 router.route('/:id')
     .get(TokenValidation, findUser)
     .put(TokenValidation, updateUser)
-    .delete(TokenValidation, AdminValidation, deleteUser)
+    .delete(TokenValidation, deleteUser)
 
 router.route('/all')
     .post(TokenValidation, AdminValidation, findAllUsers)
@@ -66,5 +66,7 @@ router.route('/updateUser/:userId')
 router.route('/experiences/:id')
     .get(TokenValidation, getUserExperiences);
 
+router.route('/delExperienciaFromUser/:experienceId/:userId')
+  .delete(delExperienciaFromUser);
 
 export default router

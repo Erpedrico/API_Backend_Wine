@@ -42,4 +42,7 @@ router.route('/addWine/:experienceId/:wineId')
 router.route('/ratings/:experienceId')
   .get(getRatingsForExperience) 
 
+router.route('/deleteUserFromExp/:experienceId/:userId')
+  .delete(delParticipantToExperiencias) 
+
 export default router

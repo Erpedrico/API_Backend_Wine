@@ -234,6 +234,27 @@ export async function findUserByName(req: Request, res: Response): Promise<Respo
     }
 }
 
+export async function delExperienciaFromUser(req: Request, res: Response): Promise<Response> {
+    try {
+        console.log("entramos a del experiencia from user")
+        const { experienceId, userId } = req.params; // Obtenemos los parámetros de la URL
+
+        // Llamamos al servicio para eliminar la experiencia
+        const updatedUser = await userServices.getEntries.delExperiencia(experienceId, userId);
+
+        // Si no se encontró el usuario o la actualización falló, respondemos con un error
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found or experience not removed' });
+        }
+
+        // Devolvemos el usuario actualizado
+        return res.json(updatedUser);
+    } catch (e) {
+        console.error(e); // Para depurar posibles errores
+        return res.status(500).json({ error: 'Failed to delete experience from user' });
+    }
+}
+
 export async function getUserExperiences(req: Request, res: Response): Promise<Response> {
     try {
         const user = await userServices.getEntries.findUserExperiences(req.user._id);

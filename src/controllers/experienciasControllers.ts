@@ -91,7 +91,8 @@ export async function deleteExperiencias(req: Request, res: Response): Promise<R
 
 export async function delParticipantToExperiencias(req: Request, res: Response): Promise<Response> {
     try {
-        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.delParticipant(req.params.idExp, req.params.idPart)
+        console.log("ENTRA AQUI")
+        const experiencias: experienciasInterface | null = await experienciasServices.getEntries.delParticipant(req.params.experienceId, req.params.userId)
         return res.json(experiencias);
     } catch (e) {
         return res.status(500).json({ e: 'Failed to del participant' });

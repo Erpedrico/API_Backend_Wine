@@ -96,8 +96,8 @@ export async function getWinesByOwner(req: Request, res: Response): Promise<Resp
         const { id: ownerId } = req.params; // Obtiene el ID del propietario desde los parámetros
         const wines = await wineServices.getEntries.getByOwner(ownerId); // Llama al servicio para obtener los vinos
 
-        if (!wines || wines.length === 0) {
-            return res.status(404).json({ message: 'No wines found for the current owner' });
+        if (!wines) {
+            return res.status(404).json({});
         }
 
         return res.status(200).json(wines); // Responde con los vinos encontrados

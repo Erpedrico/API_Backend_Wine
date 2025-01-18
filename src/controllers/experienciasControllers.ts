@@ -187,4 +187,20 @@ export async function getExperiencesByOwner(req: Request, res: Response): Promis
     }
 }
 
+export async function addWineToExperience(req: Request, res: Response): Promise<Response> {
+    try {
+        const { experienceId, wineId } = req.params;
+        const updatedExperience = await experienciasServices.getEntries.addWine(experienceId, wineId);
+
+        if (!updatedExperience) {
+            return res.status(404).json({ message: 'Experience not found' });
+        }
+
+        return res.status(200).json(updatedExperience);
+    } catch (e) {
+        console.error('Error adding wine to experience:', e);
+        return res.status(500).json({ message: 'Failed to add wine to experience' });
+    }
+}
+
 

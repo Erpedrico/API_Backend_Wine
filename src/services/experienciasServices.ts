@@ -121,4 +121,17 @@ export const getEntries = {
         return await experienciasofDB.find({ owner: ownerId });
     },
 
+    addWine: async (experienceId: string, wineId: string): Promise<experienciasInterface | null> => {
+        try {
+            return await experienciasofDB.findByIdAndUpdate(
+                experienceId,
+                { $addToSet: { wines: wineId } }, // Evita duplicados
+                { new: true } // Devuelve la experiencia actualizada
+            );
+        } catch (error) {
+            console.error('Error in addWine service:', error);
+            throw error;
+        }
+    },
+
 }

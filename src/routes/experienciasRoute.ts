@@ -1,5 +1,5 @@
 import express from 'express'
-import { getRatingsForExperience, addParticipantToExperiencias, addRatingToExperience, createExperiencias, deleteExperiencias, delParticipantToExperiencias, findAllExperiencias, findExperiencias, findUsersFromExperiencias, updateExperiencias, getExperiencesByOwner } from '../controllers/experienciasControllers'
+import { getRatingsForExperience, addParticipantToExperiencias, addRatingToExperience, createExperiencias, deleteExperiencias, delParticipantToExperiencias, findAllExperiencias, findExperiencias, findUsersFromExperiencias, updateExperiencias, getExperiencesByOwner, addWineToExperience } from '../controllers/experienciasControllers'
 
 //import toNewUser from '../extras/utils'
 
@@ -34,5 +34,9 @@ router.route('/rate/:experienceId/:userId')
 
 router.route('/ratings/:id')
     .get(getRatingsForExperience)
+
+router.route('/addWine/:experienceId/:wineId')
+    .post(addWineToExperience);
+
 
 export default router

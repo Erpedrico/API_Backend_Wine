@@ -63,5 +63,8 @@ router.route('/profile/username/:username')
 router.route('/updateUser/:userId')
     .put(TokenValidation, updateUser);
 
+router.route('/experiences/:id')
+    .get(TokenValidation, getUserExperiences);
+
 
 export default router

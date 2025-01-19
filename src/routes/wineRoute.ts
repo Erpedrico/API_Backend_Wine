@@ -14,7 +14,7 @@ router.route('/owner/:id')
     .get(TokenValidation, getWinesByOwner);
 
 router.route('/:id')
-    .get(TokenValidation, AdminValidation, findWine)
+    .get(TokenValidation, findWine)
     .put(TokenValidation, AdminValidation, updateWine)
     .delete(TokenValidation, verifyOwnership, deleteWine)
 

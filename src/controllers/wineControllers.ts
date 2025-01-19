@@ -15,9 +15,12 @@ export async function findAllWine(_req: Request, res: Response): Promise<Respons
 export async function findWine(req: Request, res: Response): Promise<Response> {
     try {
         const wine: wineInterface | null = await wineServices.getEntries.findById(req.params.id)
+        if (!wine) {
+            return res.status(404).json({ message: 'Wine not found' });
+        }
         return res.json(wine);
     } catch (e) {
-        return res.status(500).json({ e: 'Failed to find user' });
+        return res.status(500).json({ message: 'Failed to find wine' });
     }
 }
 

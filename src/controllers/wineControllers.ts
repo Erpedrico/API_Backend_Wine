@@ -23,7 +23,7 @@ export async function findWine(req: Request, res: Response): Promise<Response> {
 
 export async function createWine(req: Request, res: Response): Promise<Response> {
     try {
-        const { name, price, color, brand, grapetype, habilitado, experience, notes, year } = req.body;
+        const { name, price, color, brand, grapetype, habilitado, experience, notes, year, image } = req.body;
 
         if (!experience) {
             return res.status(400).json({ message: 'Experience is required' });
@@ -37,6 +37,7 @@ export async function createWine(req: Request, res: Response): Promise<Response>
             grapetype,
             habilitado,
             notes,
+            image,
             year,
             experience,
             owner: req.user._id, // Asegúrate de que el owner se toma del token

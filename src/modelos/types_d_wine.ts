@@ -11,6 +11,7 @@ export interface wineInterface {
     notes: { icon: string; label: string }[],
     experience: Types.ObjectId,
     year: number,
+    image: string,
 }
 
 export const wineSchema = new Schema<wineInterface>({
@@ -29,6 +30,7 @@ export const wineSchema = new Schema<wineInterface>({
     ],
     experience: { type: Schema.Types.ObjectId, ref: 'Experiencias', required: true },
     year: { type: Number, required: true },
+    image: { type: String, required: false }, // URL de la imagen del vino
 })
 
 export const wineofDB = model<wineInterface>('wine', wineSchema)

@@ -5,8 +5,13 @@ import experienciasRouter from './routes/experienciasRoute'
 import wineRouter from './routes/wineRoute'
 import chatRouter from './routes/chatRoute'
 import grapeTypeRoute from './routes/grapeTypeRoute'
+import imageRoute from './routes/imageRoute'
 import { run } from './database/mongo_conn'
 import initializeSocket from './utils/initializeSocket'
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 
 const app = express()
 app.use(express.json())
@@ -34,6 +39,7 @@ app.use('/api/experiencias', experienciasRouter)
 app.use('/api/wine', wineRouter)
 app.use('/api/chat', chatRouter)
 app.use('/api/grapetypes', grapeTypeRoute);
+app.use('/api/images', imageRoute);
 
 const server = app.listen(PORT, () => {
     console.log('el servidor esta escuchando en el puerto ' + PORT)

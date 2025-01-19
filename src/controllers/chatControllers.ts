@@ -12,9 +12,9 @@ export const getRoomsForUser = async (req: Request, res: Response) => {
         // Obtener los títulos de las experiencias del usuario
         const userExperiences = await userServices.getEntries.findUserExperiencesByUsername(username);
 
-        if (!userExperiences || userExperiences.length === 0) {
-            return res.status(404).json({ error: 'User not found or no experiences available' });
-        }
+        // if (!userExperiences || userExperiences.length === 0) {
+        //     return res.status(404).json({ error: 'User not found or no experiences available' });
+        // }
 
         // Obtener las salas relacionadas con el usuario
         const rooms = await roomsofDB.find({ name: { $regex: username } });

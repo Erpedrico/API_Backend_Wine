@@ -38,6 +38,18 @@ export const getEntries = {
                 }
             });
     },
+    delExperiencia: async (idExp: string, idPart: string) => {
+        // Intentamos actualizar el documento del usuario eliminando la experiencia
+        const user = await usersofDB.findByIdAndUpdate(
+            idPart, // ID del usuario (idPart)
+            { $pull: { experiences: idExp } }, // Utilizamos $pull para eliminar la experiencia con el idExp
+            { new: true } // Esto nos devuelve el documento actualizado
+        );
+    
+        // Retornamos el usuario actualizado
+        return user;
+    },
+    
     findIdByName: async (name: string): Promise<string | null> => {
         return await usersofDB.findOne({ name: name }).exec()
             .then(userResponse => {

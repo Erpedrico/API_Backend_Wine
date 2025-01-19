@@ -1,4 +1,4 @@
-// scripts/populateGrapeTypes.ts
+
 import mongoose from 'mongoose';
 import GrapeTypeModel from '../modelos/type_d_grapetype';
 
@@ -118,6 +118,7 @@ const grapeTypes = [
     { name: 'PETIT CABERNET', color: 'RED' },
     { name: 'PETIT VIDURE', color: 'RED' },
     { name: 'PINOT GRIS', color: 'WHITE' },
+    { name: 'PINOT NOIR', color: 'RED' },
     { name: 'PLANYT BRETÓN', color: 'RED' },
     { name: 'POEIRINHO', color: 'RED' },
     { name: 'PROBRETON', color: 'RED' },
@@ -171,7 +172,8 @@ const grapeTypes = [
 
 const populateGrapeTypes = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/Proyecto_Winners');
+        await mongoose.connect('mongodb://mongo:27017/winer-prova');
+        // await mongoose.connect('mongodb://localhost:27017/Proyecto_Winners');
         await GrapeTypeModel.insertMany(grapeTypes);
         console.log('Grape types populated successfully');
         process.exit(0);

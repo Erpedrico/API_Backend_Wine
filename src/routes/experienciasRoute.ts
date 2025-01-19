@@ -28,6 +28,9 @@ router.route('/Participant/:idExp/:idPart')
     .post(addParticipantToExperiencias)
     .delete(delParticipantToExperiencias)
 
+router.route('/experiences/:idExp/participants/:idPart')
+    .patch(addParticipantToExperiencias);    
+
 /*router.route('/:id/habilitacion')
     .patch(toggleHabilitacionExperiencias)
 */
